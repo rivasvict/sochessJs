@@ -1,0 +1,9 @@
+{
+	"name":"sochessJs",
+	"Version":"0.0.1",
+	"description":"A social half chess game",
+	"dependencies":{
+		"socket.io":"1.3.2",
+		"express":"4.10.2"
+	}
+}
