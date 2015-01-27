@@ -4,12 +4,15 @@ var board,
   fenEl = $('#fen'),
   pgnEl = $('#pgn');
 
+var dragged = false;
+
 var onDragStart = function(source, piece, position, orientation) {
   if (game.game_over() === true ||
       (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
       (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
     return false;
   }
+	dragged = true;
 };
 
 var onDrop = function(source, target) {
@@ -60,18 +63,19 @@ var updateStatus = function() {
 
 var onMoveEnd = function(){};
 
-var stopMove = false;
+var movedByUser = function(){
+	socket.emit('moved',game.history({verbose:true}));
+	dragged = false;
+}
 
 var onChange = function(){
-	if(!stopMove){
-		socket.emit('moved',board.fen());
+	if(dragged){
+		movedByUser();
 	}
-	stopMove = false;
 };
 
 socket.on('move',function(m){
-	board.position(m,false);
-	stopMove = true;
+	board.move(m[m.length - 1].from + '-' +m[m.length - 1].to);
 });
 
 var cfg = {

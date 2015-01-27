@@ -11,6 +11,7 @@ app.get('/',function(req,res){
 
 io.on('connection', function(socket){
 	socket.on('moved',function(m){
+		console.log(m);
 		io.emit('move',m);
 	});
 });
