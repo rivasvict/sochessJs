@@ -116,6 +116,13 @@ socket.on('move',function(m){
   updateStatus();
 });
 
+var player = window.location.pathname[window.location.pathname.length-1];
+
+var ort = 'white';
+
+if(parseInt(player) === 2){
+	ort = 'black';
+}
 var cfg = {
 	position:{
 		a1:'wR',
@@ -143,6 +150,7 @@ var cfg = {
   onMoveEnd: onMoveEnd,
 	onMouseoutSquare: onMouseoutSquare,
   onMouseoverSquare: onMouseoverSquare,
-	onChange: onChange
+	onChange: onChange,
+	orientation:ort
 }
 var board = new ChessBoard('board',cfg);
