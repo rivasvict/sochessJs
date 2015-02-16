@@ -35,7 +35,7 @@ var onDrop = function(source, target) {
 	var move = game.move({
     from: source,
     to: target,
-    promotion: 'q' // NOTE: always promote to a queen for example simplicity
+    promotion: 'q'
   });
 
 	if (move === null) return 'snapback';
@@ -112,8 +112,13 @@ var onChange = function(){
 };
 
 socket.on('move',function(m){
+	//console.log(m);
 	board.move(m[m.length - 1].from + '-' +m[m.length - 1].to);
-  updateStatus();
+	var move = game.move({
+    from: m[m.length - 1].from,
+    to: m[m.length - 1].to,
+    promotion: 'q'
+  });
 });
 
 var player = window.location.pathname[window.location.pathname.length-1];
