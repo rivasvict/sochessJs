@@ -100,8 +100,10 @@ var updateStatus = function() {
 
 var onMoveEnd = function(){};
 
+var idGame = window.location.pathname.substring(6,window.location.pathname.indexOf('/player/'));
+
 var movedByUser = function(){
-	socket.emit('moved',game.history({verbose:true}));
+	socket.emit('moved'+idGame,game.history({verbose:true}));
 	dragged = false;
 }
 
@@ -111,7 +113,7 @@ var onChange = function(){
 	}
 };
 
-socket.on('move',function(m){
+socket.on('move'+idGame,function(m){
 	//console.log(m);
 	board.move(m[m.length - 1].from + '-' +m[m.length - 1].to);
 	var move = game.move({

@@ -39,8 +39,8 @@ app.get('/game/:gameId/player/:playerN',function(req,res){
 	}
 	io.on('connection', function(socket){
 		socket.join(req.params.gameId);
-		socket.on('moved',function(m){
-			io.to(req.params.gameId).emit('move',m);
+		socket.on('moved'+req.params.gameId,function(m){
+			io.to(req.params.gameId).emit('move'+req.params.gameId,m);
 		});
 	});
 	//console.log(req.status);
