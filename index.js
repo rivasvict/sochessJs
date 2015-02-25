@@ -25,6 +25,7 @@ var g = {
 	complete:false
 };
 
+
 app.get('/game/:gameId/player/:playerN',function(req,res){
 	console.log(g.complete);
 	if(g.complete)
@@ -37,8 +38,9 @@ app.get('/game/:gameId/player/:playerN',function(req,res){
 		res.render('game');
 	}
 	io.on('connection', function(socket){
+		socket.join(req.params.gameId);
 		socket.on('moved',function(m){
-			io.emit('move',m);
+			io.to(req.params.gameId).emit('move',m);
 		});
 	});
 	//console.log(req.status);
@@ -50,14 +52,42 @@ app.get('/',function(req,res){
 	res.render('index',{id:'my id 33333'});
 });
 
+var rooms = [];
+
+var entrance = function(id){
+	for(i in rooms){
+		if(id === rooms[i].id){
+			if(rooms[i].un!==2){
+				rooms[i].un = rooms[i].un + 1;
+				return [true,rooms[i].un];
+			}else{
+				return [false];
+			}
+		}
+	}
+	rooms.push({id:id,un:1});
+	return [true,1];
+}
+
 app.post('/validation',function(req,res){
 	//res.redirect('/game/:gameId');
-	un = un + 1;
+
+	var watchman = entrance(req.body.idName);
+
+	if(!watchman[0]){
+		res.sendStatus(403);
+	}else{
+		res.redirect('/game/'+req.body.idName+'/player/'+watchman[1]);
+	}
+
+	
+	/*un = un + 1;
+	console.log(un+' && '+g.complete);
 	if(un>2){
 		res.sendStatus(403);
 	}else{
 		res.redirect('/game/'+req.body.idName+'/player/'+un);
-	}
+	}*/
 });
 
 http.listen(process.env.PORT || 5000);
