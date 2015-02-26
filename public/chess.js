@@ -488,6 +488,9 @@ var Chess = function(fen) {
     var them = swap_color(us);
     var second_rank = {b: RANK_7, w: RANK_2};
 
+		//    TO MAKE DOUBLE MOVE FOR PAWN CHANGE RANK_7 TO RANK_5 BECAUSE FOR HALF CHESS BLACK PAWNS'S INITIAL POSITION IS IN 5TH SQUARE
+    //var second_rank = {b: RANK_5, w: RANK_2};
+
     var first_sq = SQUARES.a8;
     var last_sq = SQUARES.h1;
     var single_square = false;
@@ -524,9 +527,9 @@ var Chess = function(fen) {
 
           /* double square */
           var square = i + PAWN_OFFSETS[us][1];
-          if (second_rank[us] === rank(i) && board[square] == null) {
+          /*if (second_rank[us] === rank(i) && board[square] == null) {
             add_move(board, moves, i, square, BITS.BIG_PAWN);
-          }
+          }*/
         }
 
         /* pawn captures */
