@@ -118,11 +118,6 @@ socket.on('move'+idGame,function(m){
 	onDrop(m[m.length - 1].from,m[m.length - 1].to);
 	board.move(m[m.length - 1].from + '-' +m[m.length - 1].to);
 	onSnapEnd();
-	/*var move = game.move({
-    from: m[m.length - 1].from,
-    to: m[m.length - 1].to,
-    promotion: 'q'
-  });*/
 });
 
 var player = window.location.pathname[window.location.pathname.length-1];
