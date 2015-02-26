@@ -115,8 +115,9 @@ var onChange = function(){
 
 socket.on('move'+idGame,function(m){
 	//console.log(m);
-	board.move(m[m.length - 1].from + '-' +m[m.length - 1].to);
 	onDrop(m[m.length - 1].from,m[m.length - 1].to);
+	board.move(m[m.length - 1].from + '-' +m[m.length - 1].to);
+	onSnapEnd();
 	/*var move = game.move({
     from: m[m.length - 1].from,
     to: m[m.length - 1].to,

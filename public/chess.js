@@ -1465,6 +1465,8 @@ var Chess = function(fen) {
       return turn;
     },
 
+//    MOVE FUNCTION
+
     move: function(move) {
       /* The move function can be called with in the following parameters:
        *
