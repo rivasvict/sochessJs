@@ -114,7 +114,7 @@ var onChange = function(){
 };
 
 socket.on('move'+idGame,function(m){
-	//console.log(m);
+	//      THIS IS A VIRTUAL MOVE THAT EMULATES USER A MOVE WITH onDrop() and onSnapEnd()
 	onDrop(m[m.length - 1].from,m[m.length - 1].to);
 	board.move(m[m.length - 1].from + '-' +m[m.length - 1].to);
 	onSnapEnd();
