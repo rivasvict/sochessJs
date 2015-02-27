@@ -30,7 +30,24 @@ var onDragStart = function(source, piece, position, orientation) {
 	dragged = true;
 };
 
+var winner = null;
+
+var returnWinner = function(turn){
+	if(turn === 'w'){
+		return 'b';
+	}else{
+		return 'w';
+	}
+}
+
+var winner = null;
+
 var onDrop = function(source, target) {
+
+	socket.on('checkMate'+idGame,function(m){
+		winner = m;
+	});
+
 	removeGreySquares();
 	var move = game.move({
     from: source,
@@ -40,7 +57,26 @@ var onDrop = function(source, target) {
 
 	if (move === null) return 'snapback';
 
-  	updateStatus();
+	if(game.in_checkmate()){
+		if(winner === null){
+			alert('you won');
+		}else{
+			alert('you lost');
+		}
+		socket.emit('cm'+idGame,returnWinner(game.turn));
+	}
+
+	if(game.in_check()){
+		if(!game.in_checkmate()){
+			alert('check');
+		}
+	};
+
+	if(game.in_draw()){
+		alert('Draw');
+	}
+
+  updateStatus();
 };
 
 var onMouseoverSquare = function(square, piece) {

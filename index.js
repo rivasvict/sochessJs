@@ -27,7 +27,6 @@ var g = {
 
 
 app.get('/game/:gameId/player/:playerN',function(req,res){
-	console.log(g.complete);
 	if(g.complete)
 		res.redirect('/');
 	if(un===2)
@@ -42,8 +41,11 @@ app.get('/game/:gameId/player/:playerN',function(req,res){
 		socket.on('moved'+req.params.gameId,function(m){
 			io.to(req.params.gameId).emit('move'+req.params.gameId,m);
 		});
+		// FOR CHECKMATE
+		socket.on('cm'+req.params.gameId,function(m){
+			io.to(req.params.gameId).emit('checkMate'+req.params.gameId,m);
+		});
 	});
-	//console.log(req.status);
 
 });
 
