@@ -616,7 +616,18 @@ var Chess = function(fen) {
     for (var i = 0, len = moves.length; i < len; i++) {
       make_move(moves[i]);
       if (!king_attacked(us)) {
-        legal_moves.push(moves[i]);
+				/* If it is inside the half chess boundaries */
+				if((moves[i].to > 23)){
+					if(((moves[i].to>=32) && (moves[i].to<=35)) || 
+						((moves[i].to>=48) && (moves[i].to<=51)) || 
+						((moves[i].to>=64) && (moves[i].to<=67)) || 
+						((moves[i].to>=80) && (moves[i].to<=83)) || 
+						((moves[i].to>=96) && (moves[i].to<=99)) || 
+						((moves[i].to>=112) && (moves[i].to<=115))){
+
+	        		legal_moves.push(moves[i]);
+					}
+				}
       }
       undo_move();
     }
