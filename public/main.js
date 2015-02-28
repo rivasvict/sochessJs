@@ -25,8 +25,12 @@ var onDragStart = function(source, piece, position, orientation) {
   if (game.game_over() === true ||
       (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
       (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-    return false;
-  }
+    	return false;
+		}
+		if((game.turn() === 'b' && (piece.search(/^w/) !== -1 || piece.search(/^b/) !== -1) && nplayer === '1') ||
+			(game.turn() === 'w' && (piece.search(/^w/) !== -1 || piece.search(/^b/) !== -1) && nplayer === '2')){
+			return false;
+		}
 	dragged = true;
 };
 
@@ -137,6 +141,7 @@ var updateStatus = function() {
 var onMoveEnd = function(){};
 
 var idGame = window.location.pathname.substring(6,window.location.pathname.indexOf('/player/'));
+var nplayer = window.location.pathname[window.location.pathname.length - 1];
 
 var movedByUser = function(){
 	socket.emit('moved'+idGame,game.history({verbose:true}));
