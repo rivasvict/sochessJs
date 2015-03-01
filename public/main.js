@@ -1,8 +1,14 @@
 var board,
   game = new Chess(),
+	boardEl = $('#board'),
   statusEl = $('#status'),
   fenEl = $('#fen'),
   pgnEl = $('#pgn');
+
+var removeHighlights = function(color) {
+  boardEl.find('.square-55d63')
+    .removeClass('highlight-' + color);
+};
 
 var removeGreySquares = function() {
   $('#board .square-55d63').css('background', '');
@@ -80,6 +86,27 @@ var onDrop = function(source, target) {
 		alert('Draw');
 	}
 
+	if(game.turn()==='b' && nplayer === '2'){
+		removeHighlights('black');
+		boardEl.find('.square-' + source).addClass('highlight-black');
+		boardEl.find('.square-' + target).addClass('highlight-black');
+	}
+	if(game.turn()==='w' && nplayer === '1'){
+		removeHighlights('white');
+		boardEl.find('.square-' + source).addClass('highlight-white');
+		boardEl.find('.square-' + target).addClass('highlight-white');
+	}
+
+	if(game.turn()==='w'){
+		if(boardEl.find('.square-'+target).hasClass('highlight-black')){
+			removeHighlights('black');
+		}
+	}else{
+		if(boardEl.find('.square-'+target).hasClass('highlight-white')){
+			removeHighlights('white');
+		}
+	}
+
   updateStatus();
 };
 
@@ -138,7 +165,8 @@ var updateStatus = function() {
   pgnEl.html(game.pgn());
 };
 
-var onMoveEnd = function(){};
+var onMoveEnd = function(){
+};
 
 var idGame = window.location.pathname.substring(6,window.location.pathname.indexOf('/player/'));
 var nplayer = window.location.pathname[window.location.pathname.length - 1];
