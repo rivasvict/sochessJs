@@ -189,6 +189,11 @@ socket.on('move'+idGame,function(m){
 	onSnapEnd();
 });
 
+socket.on('dcnt'+idGame,function(m){
+	alert('You won, your opponent has left');
+	socket.emit('user_disconnected'+idGame,'disconected');
+});
+
 var player = window.location.pathname[window.location.pathname.length-1];
 
 var ort = 'white';

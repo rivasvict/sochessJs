@@ -4,6 +4,8 @@ html
 		link(type="text/css",rel="stylesheet",href="/highlightMoves.css")
 	body
 		div(id='board',style="width: 400px")
+		form#form-game(method='post',action='/disconnection')
+			input#send-button(type='submit',value='Go to main page')
 		script(type="text/javascript",src="/jquery.min.js")
 		script(type="text/javascript",src="/socket.io-1.3.2.js")
 		script(type="text/javascript",src="/sck.js")

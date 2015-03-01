@@ -37,6 +37,7 @@ app.get('/game/:gameId/player/:playerN',function(req,res){
 		res.render('game');
 	}
 	io.on('connection', function(socket){
+		//console.log(rooms);
 		socket.join(req.params.gameId);
 		socket.on('moved'+req.params.gameId,function(m){
 			io.to(req.params.gameId).emit('move'+req.params.gameId,m);
@@ -45,6 +46,18 @@ app.get('/game/:gameId/player/:playerN',function(req,res){
 		socket.on('cm'+req.params.gameId,function(m){
 			io.to(req.params.gameId).emit('checkMate'+req.params.gameId,m);
 		});
+		socket.on('disconnect',function(){
+			//console.log(rooms);
+			//console.log(rooms);
+			console.log(socket.id);
+			io.to(req.params.gameId).emit('dcnt'+req.params.gameId,'I left');
+		});
+		socket.on('user_disconnected'+req.params.gameId,function(m){
+			socket.leave(req.params.gameId);
+			deleteElement(req.params.gameId);
+			//console.log('Disconecting from: '+req.params.gameId);
+		});
+
 	});
 
 });
@@ -71,6 +84,17 @@ var entrance = function(id){
 	return [true,1];
 }
 
+var deleteElement = function(query){
+	var oldObject = rooms;
+	rooms = [];
+	for(var i = 0; i < oldObject.lenght ;i++){
+		if(oldObject[i].id!==query){
+			cosnole.log(oldObject[i]);
+			rooms.push(oldObject[i]);
+		}
+	}
+};
+
 app.post('/validation',function(req,res){
 	//res.redirect('/game/:gameId');
 
@@ -83,13 +107,10 @@ app.post('/validation',function(req,res){
 	}
 
 	
-	/*un = un + 1;
-	console.log(un+' && '+g.complete);
-	if(un>2){
-		res.sendStatus(403);
-	}else{
-		res.redirect('/game/'+req.body.idName+'/player/'+un);
-	}*/
+});
+
+app.post('/disconnection',function(req,res){
+	res.redirect('/');
 });
 
 http.listen(process.env.PORT || 5000);
