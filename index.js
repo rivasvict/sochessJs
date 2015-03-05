@@ -39,6 +39,8 @@ app.get('/game/:gameId/player/:playerN',function(req,res){
 	io.on('connection', function(socket){
 		//console.log(rooms);
 		socket.join(req.params.gameId);
+		console.log(io.sockets.adapter.rooms);
+		console.log('------------CONNECTION------------');
 		socket.on('moved'+req.params.gameId,function(m){
 			io.to(req.params.gameId).emit('move'+req.params.gameId,m);
 		});
@@ -47,6 +49,9 @@ app.get('/game/:gameId/player/:playerN',function(req,res){
 			io.to(req.params.gameId).emit('checkMate'+req.params.gameId,m);
 		});
 		socket.on('disconnect',function(){
+		console.log(io.sockets.adapter.rooms);
+		console.log('------------DISCONNECTION------------');
+		
 			//console.log(rooms);
 			//console.log(rooms);
 			console.log(socket.id);
