@@ -60,6 +60,17 @@ var isConnected = function(player){
 	return false;
 }
 
+var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+
+var generateId = function(){
+	console.log(rooms);
+	var roomId = '';
+	for(var i = 0; i<9;i++){
+		roomId += chars.charAt(Math.floor(Math.random() * chars.length));
+	}
+	return roomId;
+}
+
 app.get('/game/:gameId/player/:playerN',function(req,res){
 	if(g.complete)
 		res.redirect('/');
@@ -71,16 +82,13 @@ app.get('/game/:gameId/player/:playerN',function(req,res){
 		res.render('game');
 	}
 	io.on('connection', function(socket){
-		console.log(socket.id);
-		if(!isConnected(socket.id)){
-			loginR(socket.id,req.params.gameId);
-		//console.log(rooms);
-//			console.log(rooms);
-			socket.join(req.params.gameId);
-		}
-		//console.log(rooms);
-//		console.log(io.sockets.adapter.rooms);
-//		console.log('------------CONNECTION------------');
+		socket.on('user_connected',function(m){
+			if(!isConnected(socket.id)){
+				loginR(socket.id,m);
+				socket.join(m);
+			}
+			io.to(req.params.gameId).emit('sendo'+req.params.gameId,rooms);
+		});
 		socket.on('moved'+req.params.gameId,function(m){
 			io.to(req.params.gameId).emit('move'+req.params.gameId,m);
 		});
@@ -89,18 +97,10 @@ app.get('/game/:gameId/player/:playerN',function(req,res){
 			io.to(req.params.gameId).emit('checkMate'+req.params.gameId,m);
 		});
 		socket.on('disconnect',function(){
-		//console.log(io.sockets.adapter.rooms);
-			//console.log('------------DISCONNECTION------------');
-		
-			//console.log(rooms);
-			//console.log(rooms);
-			//console.log(socket.id);
-			//io.to(req.params.gameId).emit('dcnt'+req.params.gameId,'I left');
+			room_id = roomName(socket.id);
+			io.to(req.params.gameId).emit('dcnt'+room_id,'dsº');
 		});
 		socket.on('user_disconnected'+req.params.gameId,function(m){
-			//socket.leave(req.params.gameId);
-			//deleteElement(req.params.gameId);
-			//console.log('Disconecting from: '+req.params.gameId);
 		});
 
 	});
@@ -143,8 +143,8 @@ var deleteElement = function(query){
 app.post('/validation',function(req,res){
 	//res.redirect('/game/:gameId');
 
+	generateId();
 	var watchman = entrance(req.body.idName);
-
 	if(!watchman[0]){
 		res.sendStatus(403);
 	}else{

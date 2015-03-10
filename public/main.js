@@ -52,6 +52,7 @@ var returnWinner = function(turn){
 
 var winner = null;
 
+
 var onDrop = function(source, target) {
 
 	socket.on('checkMate'+idGame,function(m){
@@ -171,6 +172,8 @@ var onMoveEnd = function(){
 var idGame = window.location.pathname.substring(6,window.location.pathname.indexOf('/player/'));
 var nplayer = window.location.pathname[window.location.pathname.length - 1];
 
+socket.emit('user_connected',idGame);
+
 var movedByUser = function(){
 	socket.emit('moved'+idGame,game.history({verbose:true}));
 	dragged = false;
@@ -182,6 +185,10 @@ var onChange = function(){
 	}
 };
 
+socket.on('sendo'+idGame,function(m){
+	console.log(m);
+});
+
 socket.on('move'+idGame,function(m){
 	//      THIS IS A VIRTUAL MOVE THAT EMULATES USER A MOVE WITH onDrop() and onSnapEnd()
 	onDrop(m[m.length - 1].from,m[m.length - 1].to);
@@ -191,7 +198,8 @@ socket.on('move'+idGame,function(m){
 
 socket.on('dcnt'+idGame,function(m){
 	alert('You won, your opponent has left');
-	socket.emit('user_disconnected'+idGame,'disconected');
+	var balls = 'my balls';
+	socket.emit('user_disconnected'+idGame,balls);
 });
 
 var player = window.location.pathname[window.location.pathname.length-1];
