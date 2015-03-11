@@ -171,8 +171,9 @@ var onMoveEnd = function(){
 
 var idGame = window.location.pathname.substring(6,window.location.pathname.indexOf('/user/'));
 var nplayer = window.location.pathname[window.location.pathname.length - 1];
+var username = window.location.pathname.substring(21,window.location.pathname.indexOf('/player/'));
 
-socket.emit('user_connected',idGame);
+socket.emit('user_connected',{roomId:idGame,uname:username});
 
 var movedByUser = function(){
 	socket.emit('moved'+idGame,game.history({verbose:true}));
@@ -200,8 +201,8 @@ socket.on('move'+idGame,function(m){
 
 socket.on('dcnt'+idGame,function(m){
 	alert('You won, your opponent has left');
-	var balls = 'my balls';
-	socket.emit('user_disconnected'+idGame,balls);
+	//socket.emit('user_disconnected'+idGame);
+	//socket.emit('disconnect'+idGame);
 });
 
 var player = window.location.pathname[window.location.pathname.length-1];

@@ -25,13 +25,13 @@ var g = {
 	complete:false
 };
 
-var loginR = function(player,room){
+var loginR = function(player,room,user){
 	for(var i in rooms){
 		if(rooms[i].id === room){
 			//console.log('room id: '+room);
 			//console.log(rooms[i].id + ' = ' + room);
 			if(rooms[i].players.length <= 1){
-				rooms[i].players.push(player);
+				rooms[i].players.push([player,user]);
 			}
 			return;
 		}
@@ -41,7 +41,7 @@ var loginR = function(player,room){
 var roomName = function(query){
 	for(var i in rooms){
 		for(var j in rooms[i].players){
-			if(rooms[i].players[j]===query){
+			if(rooms[i].players[j][0]===query){
 				return rooms[i].id;
 			}
 		}
@@ -51,7 +51,7 @@ var roomName = function(query){
 var isConnected = function(player){
 	for(var i in rooms){
 		for(var j in rooms[i].players){
-			if(rooms[i].players[j] === player){
+			if(rooms[i].players[j][0] === player){
 				console.log('already connected');
 				return true;
 			}
@@ -63,7 +63,6 @@ var isConnected = function(player){
 var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
 
 var generateId = function(){
-	console.log(rooms);
 	var roomId = '';
 	for(var i = 0; i<9;i++){
 		roomId += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -76,7 +75,6 @@ var generateId = function(){
 }
 
 app.get('/game/:gameId/user/:userId/player/:playerN',function(req,res){
-	console.log(req.params.playerN);
 	if(g.complete)
 		res.redirect('/');
 	if(un===2)
@@ -89,7 +87,7 @@ app.get('/game/:gameId/user/:userId/player/:playerN',function(req,res){
 	io.on('connection', function(socket){
 		socket.on('user_connected',function(m){
 			if(!isConnected(socket.id)){
-				loginR(socket.id,m);
+				loginR(socket.id,m.roomId,m.uname);
 				socket.join(m);
 			}
 			io.to(req.params.gameId).emit('sendo'+req.params.gameId,rooms);
@@ -103,7 +101,11 @@ app.get('/game/:gameId/user/:userId/player/:playerN',function(req,res){
 		});
 		socket.on('disconnect',function(){
 			room_id = roomName(socket.id);
-			io.to(req.params.gameId).emit('dcnt'+room_id,'dsº');
+			console.log(rooms);
+			deleteElement(room_id);
+			console.log(rooms);
+			console.log('I disconnecet');
+			//io.to(req.params.gameId).emit('dcnt'+room_id,'dsº');
 		});
 		socket.on('user_disconnected'+req.params.gameId,function(m){
 		});
