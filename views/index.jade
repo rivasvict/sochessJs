@@ -1,6 +1,15 @@
 body
 	html
-		form#form-game(method='post',action='/validation')
+		form#form-create-game(method='post',action='/validation')
+			| Please your usrename: 
+			input#user-id(type='text',name='userId')
+			input#send-button1(type='submit')
+		br
+		form#form-search-game(method='post',action='/validateGame')
+			| Please your usrename: 
+			input#user-id(type='text',name='userId')
+
 			| Please insert game id: 
-			input#game-id(type='text',value='ad3x7',name='idName')
-			input#send-button(type='submit')
+			input#game-id(type='text',name='idName')
+
+			input#send-button2(type='submit')

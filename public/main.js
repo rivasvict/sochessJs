@@ -169,7 +169,7 @@ var updateStatus = function() {
 var onMoveEnd = function(){
 };
 
-var idGame = window.location.pathname.substring(6,window.location.pathname.indexOf('/player/'));
+var idGame = window.location.pathname.substring(6,window.location.pathname.indexOf('/user/'));
 var nplayer = window.location.pathname[window.location.pathname.length - 1];
 
 socket.emit('user_connected',idGame);
@@ -188,6 +188,8 @@ var onChange = function(){
 socket.on('sendo'+idGame,function(m){
 	console.log(m);
 });
+
+console.log(idGame);
 
 socket.on('move'+idGame,function(m){
 	//      THIS IS A VIRTUAL MOVE THAT EMULATES USER A MOVE WITH onDrop() and onSnapEnd()

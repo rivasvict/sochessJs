@@ -68,10 +68,15 @@ var generateId = function(){
 	for(var i = 0; i<9;i++){
 		roomId += chars.charAt(Math.floor(Math.random() * chars.length));
 	}
+	for(var i in rooms){
+		if(rooms[i].id===roomId)
+			generateId();
+	}
 	return roomId;
 }
 
-app.get('/game/:gameId/player/:playerN',function(req,res){
+app.get('/game/:gameId/user/:userId/player/:playerN',function(req,res){
+	console.log(req.params.playerN);
 	if(g.complete)
 		res.redirect('/');
 	if(un===2)
@@ -140,18 +145,37 @@ var deleteElement = function(query){
 	}
 };
 
+var roomsExist = function(rname){
+	for(var i in rooms){
+		if(rooms[i].id===rname){
+			return true;
+		}
+	}
+	return false;
+}
+
 app.post('/validation',function(req,res){
 	//res.redirect('/game/:gameId');
 
-	generateId();
-	var watchman = entrance(req.body.idName);
+	var roomNameId = generateId();
+	var watchman = entrance(roomNameId);
 	if(!watchman[0]){
 		res.sendStatus(403);
 	}else{
-		res.redirect('/game/'+req.body.idName+'/player/'+watchman[1]);
+		res.redirect('/game/'+roomNameId+'/user/'+req.body.userId+'/player/'+watchman[1]);
 	}
 
 	
+});
+
+app.post('/validateGame',function(req,res){
+	var rexist = roomsExist(req.body.idName);
+	var watchman = entrance(req.body.idName);
+	if(!watchman[0] || !rexist){
+		res.sendStatus(403);
+	}else{
+		res.redirect('/game/'+req.body.idName+'/user/'+req.body.userId+'/player/'+watchman[1]);
+	}
 });
 
 app.post('/disconnection',function(req,res){
