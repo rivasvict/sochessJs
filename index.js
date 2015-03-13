@@ -88,9 +88,12 @@ app.get('/game/:gameId/user/:userId/player/:playerN',function(req,res){
 		socket.on('user_connected',function(m){
 			if(!isConnected(socket.id)){
 				loginR(socket.id,m.roomId,m.uname);
-				socket.join(m);
+				socket.join(m.roomId);
 			}
-			io.to(req.params.gameId).emit('sendo'+req.params.gameId,rooms);
+			if(m.player_number === '2'){
+				io.to(m.roomId).emit('activation'+m.roomId,{});
+			}
+			//io.to(req.params.gameId).emit('sendo'+req.params.gameId,rooms);
 		});
 		socket.on('moved'+req.params.gameId,function(m){
 			io.to(req.params.gameId).emit('move'+req.params.gameId,m);
@@ -101,11 +104,8 @@ app.get('/game/:gameId/user/:userId/player/:playerN',function(req,res){
 		});
 		socket.on('disconnect',function(){
 			room_id = roomName(socket.id);
-			console.log(rooms);
 			deleteElement(room_id);
-			console.log(rooms);
-			console.log('I disconnecet');
-			//io.to(req.params.gameId).emit('dcnt'+room_id,'dsº');
+			io.to(room_id).emit('dcnt'+room_id,'dsº');
 		});
 		socket.on('user_disconnected'+req.params.gameId,function(m){
 		});

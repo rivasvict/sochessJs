@@ -1,3 +1,7 @@
+var idGame = window.location.pathname.substring(6,window.location.pathname.indexOf('/user/'));
+var nplayer = window.location.pathname[window.location.pathname.length - 1];
+var username = window.location.pathname.substring(21,window.location.pathname.indexOf('/player/'));
+
 var board,
   game = new Chess(),
 	boardEl = $('#board'),
@@ -26,11 +30,16 @@ var greySquare = function(square) {
 };
 
 var dragged = false;
+var started = false;
 
 var onDragStart = function(source, piece, position, orientation) {
+	if(!started){
+		alert('We are waiting by your opponent to connect, please');
+	}
   if (game.game_over() === true ||
       (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-      (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+      (game.turn() === 'b' && piece.search(/^w/) !== -1) ||
+			!started) {
     	return false;
 		}
 		if((game.turn() === 'b' && (piece.search(/^w/) !== -1 || piece.search(/^b/) !== -1) && nplayer === '1') ||
@@ -169,11 +178,8 @@ var updateStatus = function() {
 var onMoveEnd = function(){
 };
 
-var idGame = window.location.pathname.substring(6,window.location.pathname.indexOf('/user/'));
-var nplayer = window.location.pathname[window.location.pathname.length - 1];
-var username = window.location.pathname.substring(21,window.location.pathname.indexOf('/player/'));
 
-socket.emit('user_connected',{roomId:idGame,uname:username});
+socket.emit('user_connected',{roomId:idGame,uname:username,player_number:nplayer});
 
 var movedByUser = function(){
 	socket.emit('moved'+idGame,game.history({verbose:true}));
@@ -185,6 +191,12 @@ var onChange = function(){
 		movedByUser();
 	}
 };
+
+socket.on('activation'+idGame,function(){
+	started = true;
+	$('#waiting-opponent').hide()
+	$('#board').show();
+});
 
 socket.on('sendo'+idGame,function(m){
 	console.log(m);
@@ -206,6 +218,7 @@ socket.on('dcnt'+idGame,function(m){
 });
 
 var player = window.location.pathname[window.location.pathname.length-1];
+
 
 var ort = 'white';
 
@@ -243,3 +256,7 @@ var cfg = {
 	orientation:ort
 }
 var board = new ChessBoard('board',cfg);
+$('#board').hide();
+if(!started){
+	$('#waiting-opponent').html('Waiting for your opponent to connect');
+}
