@@ -100,6 +100,7 @@ var onDrop = function(source, target) {
 		removeHighlights('black');
 		boardEl.find('.square-' + source).addClass('highlight-black');
 		boardEl.find('.square-' + target).addClass('highlight-black');
+		clearInterval(startTimer);
 	}
 	if(game.turn()==='w' && nplayer === '1'){
 		removeHighlights('white');
@@ -196,6 +197,9 @@ socket.on('activation'+idGame,function(){
 	started = true;
 	$('#waiting-opponent').hide()
 	$('#board').show();
+	if(ort === 'white'){
+		startClock();
+	}
 });
 
 socket.on('sendo'+idGame,function(m){
@@ -209,6 +213,7 @@ socket.on('move'+idGame,function(m){
 	onDrop(m[m.length - 1].from,m[m.length - 1].to);
 	board.move(m[m.length - 1].from + '-' +m[m.length - 1].to);
 	onSnapEnd();
+	startClock();
 });
 
 socket.on('dcnt'+idGame,function(m){
@@ -260,3 +265,32 @@ $('#board').hide();
 if(!started){
 	$('#waiting-opponent').html('Waiting for your opponent to connect');
 }
+
+var current;
+
+function startTimer(duration, display) {
+	var timer = duration, minutes, seconds;
+	setInterval(function () {
+		minutes = parseInt(timer / 60, 10);
+		seconds = parseInt(timer % 60, 10);
+
+		minutes = minutes < 10 ? "0" + minutes : minutes;
+		seconds = seconds < 10 ? "0" + seconds : seconds;
+
+		display.text(minutes + ":" + seconds);
+
+
+		if (--timer < 0) {
+			timer = duration;
+		}
+		current = [minutes,seconds];
+	}, 1000);
+}
+
+//jQuery(function ($) {
+var startClock = function(){
+	var oneMinute = 60,
+			display = $('#time');
+	startTimer(oneMinute, display);
+};
+//});
