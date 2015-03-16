@@ -98,21 +98,25 @@ var onDrop = function(source, target) {
 
 	if(game.turn()==='b' && nplayer === '2'){
 		startLClock();
+		clearInterval(foreingTrigger);
 		removeHighlights('black');
 		boardEl.find('.square-' + source).addClass('highlight-black');
 		boardEl.find('.square-' + target).addClass('highlight-black');
 	}
 	if(game.turn()==='w' && nplayer === '1'){
 		startLClock();
+		clearInterval(foreingTrigger);
 		removeHighlights('white');
 		boardEl.find('.square-' + source).addClass('highlight-white');
 		boardEl.find('.square-' + target).addClass('highlight-white');
 	}
 
 	if(game.turn()==='b' && nplayer === '1'){
+		startFClock();
 		clearInterval(localTrigger);
 	}
 	if(game.turn()==='w' && nplayer === '2'){
+		startFClock();
 		clearInterval(localTrigger);
 	}
 
@@ -208,6 +212,8 @@ socket.on('activation'+idGame,function(){
 	$('#board').show();
 	if(ort === 'white'){
 		startLClock();
+	}else{
+		startFClock();
 	}
 });
 
@@ -274,7 +280,7 @@ if(!started){
 	$('#waiting-opponent').html('Waiting for your opponent to connect');
 }
 
-var currentLocal,localTrigger;
+var currentLocal,localTrigger,currentForeing, foreingTrigger;
 
 function startLTimer(duration, display) {
 	var timer = duration, minutes, seconds;
@@ -292,16 +298,58 @@ function startLTimer(duration, display) {
 			timer = duration;
 		}
 		localMins = (parseInt(minutes) * 60) + parseInt(seconds);
+		if(localMins === 0){
+			alert('Time is up! You lost!');
+			clearInterval(localTrigger);
+		}
+
 	}, 1000);
 }
 
 var localMins = 60;
+var foreingMins = 60;
 
 //jQuery(function ($) {
 var startLClock = function(){
 	var display = $('#localTimer');
 	if(!localTrigger || (localMins !== 60)){
 		startLTimer(localMins, display);
+	}
+};
+//});
+
+
+
+function startFTimer(duration, display) {
+	var timer = duration, minutes, seconds;
+	foreingTrigger = setInterval(function () {
+		minutes = parseInt(timer / 60, 10);
+		seconds = parseInt(timer % 60, 10);
+
+		minutes = minutes < 10 ? "0" + minutes : minutes;
+		seconds = seconds < 10 ? "0" + seconds : seconds;
+
+		display.text(minutes + ":" + seconds);
+
+
+		if (--timer < 0) {
+			timer = duration;
+		}
+		foreingMins = (parseInt(minutes) * 60) + parseInt(seconds);
+		if(foreingMins === 0){
+			alert('Your opponent ran out of time! You won!');
+			clearInterval(foreingTrigger);
+		}
+	}, 1000);
+}
+
+var localMins = 60;
+
+//jQuery(function ($) {
+var startFClock = function(){
+	var display = $('#foreingTimer');
+	if(!foreingTrigger || (foreingMins !== 60)){
+		startFTimer(foreingMins, display);
 	}
 };
 //});
