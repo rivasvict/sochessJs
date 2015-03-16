@@ -100,7 +100,6 @@ var onDrop = function(source, target) {
 		removeHighlights('black');
 		boardEl.find('.square-' + source).addClass('highlight-black');
 		boardEl.find('.square-' + target).addClass('highlight-black');
-		clearInterval(startTimer);
 	}
 	if(game.turn()==='w' && nplayer === '1'){
 		removeHighlights('white');
@@ -119,6 +118,7 @@ var onDrop = function(source, target) {
 	}
 
   updateStatus();
+	clearInterval(localTrigger);
 };
 
 var onMouseoverSquare = function(square, piece) {
@@ -266,11 +266,11 @@ if(!started){
 	$('#waiting-opponent').html('Waiting for your opponent to connect');
 }
 
-var current;
+var currentLocal,localTrigger;
 
 function startTimer(duration, display) {
 	var timer = duration, minutes, seconds;
-	setInterval(function () {
+	localTrigger = setInterval(function () {
 		minutes = parseInt(timer / 60, 10);
 		seconds = parseInt(timer % 60, 10);
 
@@ -283,7 +283,7 @@ function startTimer(duration, display) {
 		if (--timer < 0) {
 			timer = duration;
 		}
-		current = [minutes,seconds];
+		currentLocal = (parseInt(minutes) * 60) + parseInt(seconds);
 	}, 1000);
 }
 
@@ -291,6 +291,8 @@ function startTimer(duration, display) {
 var startClock = function(){
 	var oneMinute = 60,
 			display = $('#time');
-	startTimer(oneMinute, display);
+	if(!localTrigger){
+		startTimer(oneMinute, display);
+	}
 };
 //});
