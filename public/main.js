@@ -280,6 +280,11 @@ if(!started){
 	$('#waiting-opponent').html('Waiting for your opponent to connect');
 }
 
+var localMins = 60;
+var foreingMins = 60;
+var localStarted = false;
+var foreingStarted = false;
+
 var currentLocal,localTrigger,currentForeing, foreingTrigger;
 
 function startLTimer(duration, display) {
@@ -300,19 +305,19 @@ function startLTimer(duration, display) {
 		localMins = (parseInt(minutes) * 60) + parseInt(seconds);
 		if(localMins === 0){
 			alert('Time is up! You lost!');
+			clearInterval(foreingTrigger);
 			clearInterval(localTrigger);
 		}
+		localStarted = true;
 
 	}, 1000);
 }
 
-var localMins = 60;
-var foreingMins = 60;
 
 //jQuery(function ($) {
 var startLClock = function(){
 	var display = $('#localTimer');
-	if(!localTrigger || (localMins !== 60)){
+	if(!localTrigger || localStarted){
 		startLTimer(localMins, display);
 	}
 };
@@ -339,7 +344,9 @@ function startFTimer(duration, display) {
 		if(foreingMins === 0){
 			alert('Your opponent ran out of time! You won!');
 			clearInterval(foreingTrigger);
+			clearInterval(localTrigger);
 		}
+		foreingStarted = true;
 	}, 1000);
 }
 
@@ -348,7 +355,7 @@ var localMins = 60;
 //jQuery(function ($) {
 var startFClock = function(){
 	var display = $('#foreingTimer');
-	if(!foreingTrigger || (foreingMins !== 60)){
+	if(!foreingTrigger || foreingStarted){
 		startFTimer(foreingMins, display);
 	}
 };
