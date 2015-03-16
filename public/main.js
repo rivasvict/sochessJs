@@ -97,15 +97,25 @@ var onDrop = function(source, target) {
 	}
 
 	if(game.turn()==='b' && nplayer === '2'){
+		startLClock();
 		removeHighlights('black');
 		boardEl.find('.square-' + source).addClass('highlight-black');
 		boardEl.find('.square-' + target).addClass('highlight-black');
 	}
 	if(game.turn()==='w' && nplayer === '1'){
+		startLClock();
 		removeHighlights('white');
 		boardEl.find('.square-' + source).addClass('highlight-white');
 		boardEl.find('.square-' + target).addClass('highlight-white');
 	}
+
+	if(game.turn()==='b' && nplayer === '1'){
+		clearInterval(localTrigger);
+	}
+	if(game.turn()==='w' && nplayer === '2'){
+		clearInterval(localTrigger);
+	}
+
 
 	if(game.turn()==='w'){
 		if(boardEl.find('.square-'+target).hasClass('highlight-black')){
@@ -118,7 +128,6 @@ var onDrop = function(source, target) {
 	}
 
   updateStatus();
-	clearInterval(localTrigger);
 };
 
 var onMouseoverSquare = function(square, piece) {
@@ -198,7 +207,7 @@ socket.on('activation'+idGame,function(){
 	$('#waiting-opponent').hide()
 	$('#board').show();
 	if(ort === 'white'){
-		startClock();
+		startLClock();
 	}
 });
 
@@ -213,7 +222,6 @@ socket.on('move'+idGame,function(m){
 	onDrop(m[m.length - 1].from,m[m.length - 1].to);
 	board.move(m[m.length - 1].from + '-' +m[m.length - 1].to);
 	onSnapEnd();
-	startClock();
 });
 
 socket.on('dcnt'+idGame,function(m){
@@ -268,7 +276,7 @@ if(!started){
 
 var currentLocal,localTrigger;
 
-function startTimer(duration, display) {
+function startLTimer(duration, display) {
 	var timer = duration, minutes, seconds;
 	localTrigger = setInterval(function () {
 		minutes = parseInt(timer / 60, 10);
@@ -283,16 +291,17 @@ function startTimer(duration, display) {
 		if (--timer < 0) {
 			timer = duration;
 		}
-		currentLocal = (parseInt(minutes) * 60) + parseInt(seconds);
+		localMins = (parseInt(minutes) * 60) + parseInt(seconds);
 	}, 1000);
 }
 
+var localMins = 60;
+
 //jQuery(function ($) {
-var startClock = function(){
-	var oneMinute = 60,
-			display = $('#time');
-	if(!localTrigger){
-		startTimer(oneMinute, display);
+var startLClock = function(){
+	var display = $('#localTimer');
+	if(!localTrigger || (localMins !== 60)){
+		startLTimer(localMins, display);
 	}
 };
 //});
