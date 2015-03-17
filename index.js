@@ -7,6 +7,37 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+
+
+var passport = require('passport')
+  , TwitterStrategy = require('passport-twitter').Strategy;
+app.use(session({ secret: 'SECRET' }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+
+
+passport.use(new TwitterStrategy({
+    consumerKey: '5WcVdkvcBv0FNjzelpsObRlEn',
+    consumerSecret: 'WsHHqEB5NstRy9125d7KjCUG2OJtLwox1c8wEoVlCFXEoQr367',
+    //callbackURL: "http://sochessJs.herokuapp.com/"
+    callbackURL: "http://tests.sochessJs.com:5000/"
+  },
+  function(token, tokenSecret, profile, done) {
+    User.findOrCreate('', function(err, user) {
+      if (err) { return done(err); }
+      done(null, user);
+    });
+  }
+));
+
+app.get('/auth/twitter', passport.authenticate('twitter'));
+
+app.get('/auth/twitter/callback', 
+  passport.authenticate('twitter', { successRedirect: '/',
+                                     failureRedirect: '/login' }));
 //var redirect = require('express-redirect');
 
 
@@ -73,6 +104,10 @@ var generateId = function(){
 	}
 	return roomId;
 }
+
+app.get('/user/:user',function(req,res){
+	
+});
 
 app.get('/game/:gameId/user/:userId/player/:playerN',function(req,res){
 	if(g.complete)
