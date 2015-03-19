@@ -9,7 +9,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 
-var user = {};
 
 var passport = require('passport')
   , TwitterStrategy = require('passport-twitter').Strategy;
@@ -17,38 +16,64 @@ app.use(session({ secret: 'SECRET' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 passport.serializeUser(function(user, done) {
-  done(null, user.id);
+	done(null, user);
+});
+ 
+passport.deserializeUser(function(obj, done) {
+	done(null, obj);
 });
 
-passport.deserializeUser(function(id, done) {
-  done(null, user);
+app.get('/testRoute',
+	passport.authorize('twitter-authz', { failureRedirect: '/account' }),
+	function(req, res) {
+	var user = req.user;
+	var account = req.account;
+	account.userId = user.id;
+	account.save(function(err){
+		if (err) { return self.error(err); }
+		self.redirect('/');
+	});
+
+
 });
 
-passport.use(new TwitterStrategy({
+passport.use('twitter-authz',new TwitterStrategy({
     consumerKey: '5WcVdkvcBv0FNjzelpsObRlEn',
     consumerSecret: 'WsHHqEB5NstRy9125d7KjCUG2OJtLwox1c8wEoVlCFXEoQr367',
     //callbackURL: "http://sochessJs.herokuapp.com/"
-    callbackURL: "http://tests.sochessJs.com:5000/auth/twitter/callback"
+    callbackURL: "http://tests.sochessJs.com:5000/testRoute"
   },
   function(token, tokenSecret, profile, done) {
-		user.token=token;
-		user.profile=profile;
-		user.id = user.profile._json.screen_name;
-    done(null, user);
-    /*User.findOrCreate('', function(err, user) {
+    Account.findOrCreate({domain:'twitter.com',uid: profile.id}, function(err, account) {
+			
       if (err) { return done(err); }
-      done(null, user);
-    });*/
+			if (account) { return done(null,account) }
+			var account = new Account();
+			account.domain='twitter.com';
+			account.uid=profile.id;
+			var t = { kind: 'oauth', token: token, attributes: { tokenSecret: tokenSecret } };
+			account.tokens.push(t);
+      return done(null, account);
+    });
   }
 ));
 
-app.get('/auth/twitter', passport.authenticate('twitter'));
+app.get('/auth/twitter', passport.authorize('twitter-authz', { failureRedirect: '/account' }));
 
 app.get('/auth/twitter/callback', 
-  passport.authenticate('twitter', { successRedirect: '/',
-                                     failureRedirect: '/login' }));
+	passport.authorize('twitter-authz', { failureRedirect: '/account' }),
+	function(req, res) {
+	var user = req.user;
+	var account = req.account;
+	account.userId = user.id;
+	account.save(function(err){
+		if (err) { return self.error(err); }
+		self.redirect('/');
+	});
+});
+  /*passport.authenticate('twitter', { successRedirect: '/',
+                                     failureRedirect: '/login' }));*/
 //var redirect = require('express-redirect');
 
 
@@ -162,8 +187,7 @@ app.get('/game/:gameId/user/:userId/player/:playerN',function(req,res){
 
 app.get('/',function(req,res){
 	//res.sendFile(__dirname+'/index.html');
-	console.log(user.id);	
-	res.render('index',{id:user.id});
+	res.render('index',{id:'my id 33333'});
 });
 
 var rooms = [];

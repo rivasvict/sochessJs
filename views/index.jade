@@ -2,12 +2,12 @@ body
 	html
 		form#form-create-game(method='post',action='/validation')
 			| Please your usrename: 
-			input#user-id(type='text',name='userId')
+			input#user-id(type='text',name='userId',value='#{id}',readonly)
 			input#send-button1(type='submit')
 		br
 		form#form-search-game(method='post',action='/validateGame')
 			| Please your usrename: 
-			input#user-id(type='text',name='userId')
+			input#user-id(type='text',name='userId',value='#{id}')
 
 			| Please insert game id: 
 			input#game-id(type='text',name='idName')
