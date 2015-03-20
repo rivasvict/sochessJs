@@ -8,6 +8,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
+
+
 
 var user = {};
 
@@ -120,9 +123,10 @@ app.get('/user/:user',function(req,res){
 	
 });
 
-app.get('/game/:gameId/user/:userId/player/:playerN',function(req,res){
+app.get('/game/:gameId/user/:userId/player/:playerN',ensureLoggedIn('/auth/twitter'),function(req,res){
 	var roomExistance = roomsExist(req.params.gameId);
-	if(req.user && roomExistance){
+	
+	if(req.cookies.user && roomExistance){
 	if(g.complete)
 		res.redirect('/');
 	if(un===2)
@@ -163,11 +167,13 @@ app.get('/game/:gameId/user/:userId/player/:playerN',function(req,res){
 	}
 });
 
-app.get('/',function(req,res){
+app.get('/',ensureLoggedIn('/auth/twitter'),function(req,res){
 	//res.sendFile(__dirname+'/index.html');
-	
-	if(req.user)	{
-		res.render('index',{id:user.id});
+	if(req.cookies.user === undefined){
+		res.cookie('user',req.user.profile.username);
+	}
+	if(req.cookies.user !== undefined)	{
+		res.render('index',{id:req.cookies.user});
 	}else{
 		res.redirect('/auth/twitter');
 	}

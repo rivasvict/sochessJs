@@ -1,13 +1,19 @@
 body
 	html
+		| Challenge a friend: 
+		br
+		br
 		form#form-create-game(method='post',action='/validation')
-			| Please your usrename: 
-			input#user-id(type='text',name='userId',value='#{id}',readonly)
-			input#send-button1(type='submit')
+			input#user-id(type='hidden',name='userId',value='#{id}',readonly)
+			| Twitter username to be challenged: 
+			input#user_challenge(type='text')
+			input#send-button1(type='submit',value='Challenge')
+		br
+		| or connect to a game
+		br
 		br
 		form#form-search-game(method='post',action='/validateGame')
-			| Please your usrename: 
-			input#user-id(type='text',name='userId',value='#{id}')
+			input#user-id(type='hidden',name='userId',value='#{id}')
 
 			| Please insert game id: 
 			input#game-id(type='text',name='idName')
