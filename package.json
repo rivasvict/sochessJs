@@ -10,6 +10,7 @@
     "express-redirect": "^1.1.1",
     "jade": "~1.3.0",
     "morgan": "~1.0.0",
+    "node-twitter-api": "^1.5.0",
     "passport-twitter": "~1.0.3",
     "socket.io": "1.3.2",
     "static-favicon": "~1.0.0"

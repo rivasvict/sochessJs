@@ -6,7 +6,7 @@ body
 		form#form-create-game(method='post',action='/validation')
 			input#user-id(type='hidden',name='userId',value='#{id}',readonly)
 			| Twitter username to be challenged: 
-			input#user_challenge(type='text')
+			input#user_challenge(type='text',name='uChallenge')
 			input#send-button1(type='submit',value='Challenge')
 		br
 		| or connect to a game

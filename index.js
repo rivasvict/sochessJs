@@ -9,6 +9,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
+var twitterAPI = require('node-twitter-api');
 
 
 
@@ -36,6 +37,7 @@ passport.use(new TwitterStrategy({
     callbackURL: "http://tests.sochessJs.com:5000/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
+		user.tokenS=tokenSecret;
 		user.token=token;
 		user.profile=profile;
 		user.id = user.profile._json.screen_name;
@@ -46,6 +48,12 @@ passport.use(new TwitterStrategy({
     });*/
   }
 ));
+
+var twitter = new twitterAPI({
+	consumerKey: '5WcVdkvcBv0FNjzelpsObRlEn',
+	consumerSecret: 'WsHHqEB5NstRy9125d7KjCUG2OJtLwox1c8wEoVlCFXEoQr367'/*,
+	callback: 'http://tests.sochessJs.com:5000/auth/twitter/callback'*/
+});
 
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
@@ -170,7 +178,10 @@ app.get('/game/:gameId/user/:userId/player/:playerN',ensureLoggedIn('/auth/twitt
 app.get('/',ensureLoggedIn('/auth/twitter'),function(req,res){
 	//res.sendFile(__dirname+'/index.html');
 	if(req.cookies.user === undefined){
+	//console.log(user.token)
 		res.cookie('user',req.user.profile.username);
+		res.cookie('token',user.token);
+		res.cookie('tokenS',user.tokenS);
 	}
 	if(req.cookies.user !== undefined)	{
 		res.render('index',{id:req.cookies.user});
@@ -224,6 +235,16 @@ app.post('/validation',function(req,res){
 	if(!watchman[0]){
 		res.sendStatus(403);
 	}else{
+		twitter.statuses('update',{
+			status:"I have challenged you @"+req.body.uChallenge+" http://tests.sochessJs.com:5000/game/"+roomNameId+"/user/"+req.body.uChallenge+"/player/2"
+		},req.cookies.token,req.cookies.tokenS,function(error,data,response){
+			if(error){
+				console.log(error);
+			}else{
+				console.log('succeeded');
+			}
+		});
+
 		res.redirect('/game/'+roomNameId+'/user/'+req.body.userId+'/player/'+watchman[1]);
 	}
 
