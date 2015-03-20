@@ -121,6 +121,8 @@ app.get('/user/:user',function(req,res){
 });
 
 app.get('/game/:gameId/user/:userId/player/:playerN',function(req,res){
+	var roomExistance = roomsExist(req.params.gameId);
+	if(req.user && roomExistance){
 	if(g.complete)
 		res.redirect('/');
 	if(un===2)
@@ -155,15 +157,20 @@ app.get('/game/:gameId/user/:userId/player/:playerN',function(req,res){
 		});
 		socket.on('user_disconnected'+req.params.gameId,function(m){
 		});
-
 	});
-
+	}else{
+		res.redirect('/auth/twitter');
+	}
 });
 
 app.get('/',function(req,res){
 	//res.sendFile(__dirname+'/index.html');
-	console.log(user.id);	
-	res.render('index',{id:user.id});
+	
+	if(req.user)	{
+		res.render('index',{id:user.id});
+	}else{
+		res.redirect('/auth/twitter');
+	}
 });
 
 var rooms = [];
