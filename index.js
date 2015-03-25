@@ -34,7 +34,8 @@ passport.use(new TwitterStrategy({
     consumerKey: '5WcVdkvcBv0FNjzelpsObRlEn',
     consumerSecret: 'WsHHqEB5NstRy9125d7KjCUG2OJtLwox1c8wEoVlCFXEoQr367',
     //callbackURL: "http://sochessJs.herokuapp.com/"
-    callbackURL: "http://tests.sochessJs.com:5000/auth/twitter/callback"
+    callbackURL: "http://sochessJs.herokuapp.com/auth/twitter/callback"
+    //callbackURL: "http://tests.sochessJs.com:5000/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
 		user.tokenS=tokenSecret;
@@ -135,7 +136,8 @@ app.get('/auth/game/:gameId/user/:userId/player/:playerN',function(req,res,next)
 	passport.authenticate(
 		'twitter',
 		{
-			callbackURL: "http://tests.sochessJs.com:5000/callback/game/"+req.params.gameId+"/user/"+req.params.userId+"/player/"+req.params.playerN
+			callbackURL: "http://sochessJs.herokuapp.com/callback/game/"+req.params.gameId+"/user/"+req.params.userId+"/player/"+req.params.playerN
+			//callbackURL: "http://tests.sochessJs.com:5000/callback/game/"+req.params.gameId+"/user/"+req.params.userId+"/player/"+req.params.playerN
 		}
 	)(req,res,next);
 });
