@@ -269,7 +269,8 @@ app.post('/validation',function(req,res){
 		res.sendStatus(403);
 	}else{
 		twitter.statuses('update',{
-			status:"I have challenged you @"+req.body.uChallenge+" http://tests.sochessJs.com:5000/game/"+roomNameId+"/user/"+req.body.uChallenge+"/player/2"
+			status:"I have challenged you @"+req.body.uChallenge+" http://sochessJs.herokuapp.com/game/"+roomNameId+"/user/"+req.body.uChallenge+"/player/2"
+			//status:"I have challenged you @"+req.body.uChallenge+" http://tests.sochessJs.com:5000/game/"+roomNameId+"/user/"+req.body.uChallenge+"/player/2"
 		},req.cookies.token,req.cookies.tokenS,function(error,data,response){
 			if(error){
 				console.log(error);
