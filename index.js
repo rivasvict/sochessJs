@@ -34,7 +34,7 @@ passport.use(new TwitterStrategy({
     consumerKey: '5WcVdkvcBv0FNjzelpsObRlEn',
     consumerSecret: 'WsHHqEB5NstRy9125d7KjCUG2OJtLwox1c8wEoVlCFXEoQr367',
     //callbackURL: "http://sochessJs.herokuapp.com/"
-    callbackURL: "http://sochessJs.herokuapp.com/auth/twitter/callback"
+    callbackURL: "https://sochessJs.herokuapp.com/auth/twitter/callback"
     //callbackURL: "http://tests.sochessJs.com:5000/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
@@ -136,7 +136,7 @@ app.get('/auth/game/:gameId/user/:userId/player/:playerN',function(req,res,next)
 	passport.authenticate(
 		'twitter',
 		{
-			callbackURL: "http://sochessJs.herokuapp.com/callback/game/"+req.params.gameId+"/user/"+req.params.userId+"/player/"+req.params.playerN
+			callbackURL: "https://sochessJs.herokuapp.com/callback/game/"+req.params.gameId+"/user/"+req.params.userId+"/player/"+req.params.playerN
 			//callbackURL: "http://tests.sochessJs.com:5000/callback/game/"+req.params.gameId+"/user/"+req.params.userId+"/player/"+req.params.playerN
 		}
 	)(req,res,next);
@@ -269,7 +269,7 @@ app.post('/validation',function(req,res){
 		res.sendStatus(403);
 	}else{
 		twitter.statuses('update',{
-			status:"I have challenged you @"+req.body.uChallenge+" http://sochessJs.herokuapp.com/game/"+roomNameId+"/user/"+req.body.uChallenge+"/player/2"
+			status:"I have challenged you @"+req.body.uChallenge+" https://sochessJs.herokuapp.com/game/"+roomNameId+"/user/"+req.body.uChallenge+"/player/2"
 			//status:"I have challenged you @"+req.body.uChallenge+" http://tests.sochessJs.com:5000/game/"+roomNameId+"/user/"+req.body.uChallenge+"/player/2"
 		},req.cookies.token,req.cookies.tokenS,function(error,data,response){
 			if(error){
