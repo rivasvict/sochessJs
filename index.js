@@ -34,8 +34,8 @@ passport.use(new TwitterStrategy({
     consumerKey: '5WcVdkvcBv0FNjzelpsObRlEn',
     consumerSecret: 'WsHHqEB5NstRy9125d7KjCUG2OJtLwox1c8wEoVlCFXEoQr367',
     //callbackURL: "http://sochessJs.herokuapp.com/"
-    callbackURL: "https://sochessJs.herokuapp.com/auth/twitter/callback"
-    //callbackURL: "http://tests.sochessJs.com:5000/auth/twitter/callback"
+    //callbackURL: "https://sochessJs.herokuapp.com/auth/twitter/callback"
+    callbackURL: "http://tests.sochessJs.com:5000/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
 		user.tokenS=tokenSecret;
@@ -132,29 +132,29 @@ app.get('/user/:user',function(req,res){
 	
 });
 
-app.get('/auth/game/:gameId/user/:userId/player/:playerN',function(req,res,next){
+app.get('/auth/game/:gameId/op/:opponent/user/:userId/player/:playerN',function(req,res,next){
 	passport.authenticate(
 		'twitter',
 		{
-			callbackURL: "https://sochessJs.herokuapp.com/callback/game/"+req.params.gameId+"/user/"+req.params.userId+"/player/"+req.params.playerN
-			//callbackURL: "http://tests.sochessJs.com:5000/callback/game/"+req.params.gameId+"/user/"+req.params.userId+"/player/"+req.params.playerN
+			//callbackURL: "https://sochessJs.herokuapp.com/callback/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN
+			callbackURL: "https://tests.sochessJs.com:5000/callback/game/"+req.params.gameId+"/user/"+req.params.userId+"/player/"+req.params.playerN
 		}
 	)(req,res,next);
 });
 
-app.get('/callback/game/:gameId/user/:userId/player/:playerN',function(req,res,next){
+app.get('/callback/game/:gameId/op/:opponent/user/:userId/player/:playerN',function(req,res,next){
 	passport.authenticate(
 		'twitter',
 		function(err,user,info){
 			if (err) { return next(err); }
-			if (!user) { return res.redirect("/auth/game/"+req.params.gameId+"/user/"+req.params.userId+"/player/"+req.params.playerN); }
+			if (!user) { return res.redirect("/auth/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN); }
 			req.logIn(user,function(err){
 				if (err) { return next(err); }
 				user.id = user.profile._json.screen_name;
 				res.cookie('user',user.id);
 				res.cookie('token',user.token);
 				res.cookie('tokenS',user.tokenS);
-				return res.redirect("/game/"+req.params.gameId+"/user/"+req.params.userId+"/player/"+req.params.playerN);
+				return res.redirect("/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN);
 			});
 		}
 	/*{
@@ -164,7 +164,7 @@ app.get('/callback/game/:gameId/user/:userId/player/:playerN',function(req,res,n
 	)(req,res,next);
 });
 
-app.get('/game/:gameId/user/:userId/player/:playerN',function(req,res){
+app.get('/game/:gameId/op/:opponent/user/:userId/player/:playerN',function(req,res){
 	var roomExistance = roomsExist(req.params.gameId);
 	
 	if(req.cookies.user && roomExistance){
@@ -204,7 +204,7 @@ app.get('/game/:gameId/user/:userId/player/:playerN',function(req,res){
 		});
 	});
 	}else{
-		res.redirect("/auth/game/"+req.params.gameId+"/user/"+req.params.userId+"/player/"+req.params.playerN);
+		res.redirect("/auth/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN);
 	}
 });
 
@@ -269,8 +269,8 @@ app.post('/validation',function(req,res){
 		res.sendStatus(403);
 	}else{
 		twitter.statuses('update',{
-			status:"I have challenged you @"+req.body.uChallenge+" https://sochessJs.herokuapp.com/game/"+roomNameId+"/user/"+req.body.uChallenge+"/player/2"
-			//status:"I have challenged you @"+req.body.uChallenge+" http://tests.sochessJs.com:5000/game/"+roomNameId+"/user/"+req.body.uChallenge+"/player/2"
+			//status:"I have challenged you @"+req.body.uChallenge+" https://sochessJs.herokuapp.com/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2"
+			status:"I have challenged you @"+req.body.uChallenge+" http://tests.sochessJs.com:5000/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2"
 		},req.cookies.token,req.cookies.tokenS,function(error,data,response){
 			if(error){
 				console.log(error);
@@ -279,7 +279,7 @@ app.post('/validation',function(req,res){
 			}
 		});
 
-		res.redirect('/game/'+roomNameId+'/user/'+req.body.userId+'/player/'+watchman[1]);
+		res.redirect('/game/'+roomNameId+'/op/'+req.body.uChallenge+'/user/'+req.body.userId+'/player/'+watchman[1]);
 	}
 
 	
@@ -291,7 +291,7 @@ app.post('/validateGame',function(req,res){
 	if(!watchman[0] || !rexist){
 		res.sendStatus(403);
 	}else{
-		res.redirect('/game/'+req.body.idName+'/user/'+req.body.userId+'/player/'+watchman[1]);
+		res.redirect('/game/'+req.body.idName+'/op/'+req.body.uChallenge+'/user/'+req.body.userId+'/player/'+watchman[1]);
 	}
 });
 

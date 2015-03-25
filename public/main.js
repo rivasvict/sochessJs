@@ -1,6 +1,8 @@
-var idGame = window.location.pathname.substring(6,window.location.pathname.indexOf('/user/'));
+var idGame = window.location.pathname.substring(window.location.pathname.indexOf('/game/')+6,window.location.pathname.indexOf('/op/'));
 var nplayer = window.location.pathname[window.location.pathname.length - 1];
-var username = window.location.pathname.substring(21,window.location.pathname.indexOf('/player/'));
+var username = window.location.pathname.substring(window.location.pathname.indexOf('/user/')+6,window.location.pathname.indexOf('/player/'));
+var opponent = window.location.pathname.substring(window.location.pathname.indexOf('/op/')+4,window.location.pathname.indexOf('/user/'));
+var player = window.location.pathname[window.location.pathname.length-1];
 
 var board,
   game = new Chess(),
@@ -236,7 +238,6 @@ socket.on('dcnt'+idGame,function(m){
 	//socket.emit('disconnect'+idGame);
 });
 
-var player = window.location.pathname[window.location.pathname.length-1];
 
 
 var ort = 'white';
