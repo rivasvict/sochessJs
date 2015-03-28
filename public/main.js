@@ -63,8 +63,33 @@ var returnWinner = function(turn){
 
 var winner = null;
 
+var points = {
+	w:0,
+	b:0
+};
+
+var piecesPoints = {
+	q:6,
+	Q:6,
+	p:1,
+	P:1,
+	r:3,
+	R:3
+};
+
+var punctuation = function(piece,target){
+	points[target] = points[target] + piecesPoints[piece];
+	if(nplayer==='1'){
+		$('#localPoints').text(points.w);
+		$('#foreingPoints').text(points.b);
+	}else{
+		$('#localPoints').text(points.b);
+		$('#foreingPoints').text(points.w);
+	}
+};
 
 var onDrop = function(source, target) {
+
 
 	socket.on('checkMate'+idGame,function(m){
 		winner = m;
@@ -132,7 +157,10 @@ var onDrop = function(source, target) {
 			removeHighlights('white');
 		}
 	}
-
+	if(game.history({verbose:true})[game.history({verbose:true}).length -1].captured !== undefined){
+		var movement = game.history({verbose:true})[game.history({verbose:true}).length -1];
+		punctuation(movement.captured,movement.color);
+	}
   updateStatus();
 };
 
