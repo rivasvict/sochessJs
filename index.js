@@ -42,6 +42,7 @@ passport.use(new TwitterStrategy({
 		user.token=token;
 		user.profile=profile;
 		user.id = user.profile._json.screen_name;
+		console.log(user.profile._json.profile_image_url);
     done(null, user);
     /*User.findOrCreate('', function(err, user) {
       if (err) { return done(err); }

@@ -236,7 +236,18 @@ var onChange = function(){
 	}
 };
 
+var showUsernames = function(){
+	$('#localUser').text(username);
+	$('#foreingUser').text(opponent);
+	$('#localAvatar').html('<img src="http://avatars.io/twitter/'+username+'">');
+	$('#foreingAvatar').html('<img src="http://avatars.io/twitter/'+opponent+'">');
+};
+
 socket.on('activation'+idGame,function(m){
+	$.get('http://avatars.io/twitter/'+username,function(data){
+		console.log(data);
+	});
+	showUsernames();
 	started = true;
 	$('#waiting-opponent').hide()
 	$('#board').show();
