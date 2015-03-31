@@ -1,0 +1,40 @@
+#indexContent{
+	background:url("/img/chess_2560x1600_230.jpeg") no-repeat center center fixed;
+	background-size: cover;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+}
+
+#form-create-game{
+	background-color:rgba(255, 255, 255, 0.5);
+	padding-bottom: 30px;
+	padding-top: 30px;
+	width: 35%;
+	margin-left: 33%;
+	border-radius: 14px;
+	position: absolute;
+}
+
+.center{
+	text-align:center;
+}
+
+.challengeCls{
+	margin-top: 15px;
+	margin-bottom: 7px;
+}
+
+#challengueTittle{
+	font-weight: bold;
+	font-size: 24px;
+	width: 57%;
+	margin-left: 20%;
+}
+
+#user_challenge{
+	width: 88%;
+	height: 37px;
+	padding-left: 10px;
+	border-radius: 6px;
+}

@@ -1,0 +1,11 @@
+.userMeta{
+	position:absolute;
+	top: 6px;
+	left: 17px;
+}
+
+.userMeta img{
+	margin-left: 6px;
+	width: 22%;
+	border-radius: 33px;
+}
