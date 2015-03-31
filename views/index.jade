@@ -1,21 +1,20 @@
-body
-	html
-		| Challenge a friend: 
-		br
-		br
-		form#form-create-game(method='post',action='/validation')
-			input#user-id(type='hidden',name='userId',value='#{id}',readonly)
-			| Twitter username to be challenged: 
-			input#user_challenge(type='text',name='uChallenge')
-			input#send-button1(type='submit',value='Challenge')
-		br
-		| or connect to a game
-		br
-		br
-		form#form-search-game(method='post',action='/validateGame')
-			input#user-id(type='hidden',name='userId',value='#{id}')
+extends layout
 
-			| Please insert game id: 
-			input#game-id(type='text',name='idName')
-
-			input#send-button2(type='submit')
+block content
+	| Challenge a friend: 
+	br
+	br
+	form#form-create-game(method='post',action='/validation')
+		input#user-id(type='hidden',name='userId',value='#{id}',readonly)
+		| Twitter username to be challenged: 
+		input#user_challenge(type='text',name='uChallenge')
+		input#send-button1(type='submit',value='Challenge')
+	br
+	| or connect to a game
+	br
+	br
+	form#form-search-game(method='post',action='/validateGame')
+		input#user-id(type='hidden',name='userId',value='#{id}')
+		| Please insert game id: 
+		input#game-id(type='text',name='idName')
+		input#send-button2(type='submit')
