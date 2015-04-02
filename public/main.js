@@ -81,11 +81,11 @@ var piecesPoints = {
 var punctuation = function(piece,target){
 	points[target] = points[target] + piecesPoints[piece];
 	if(nplayer==='1'){
-		$('#localPoints').text(points.w);
-		$('#foreingPoints').text(points.b);
+		$('#localPoints').text(points.w + ' points');
+		$('#foreingPoints').text(points.b + ' points');
 	}else{
-		$('#localPoints').text(points.b);
-		$('#foreingPoints').text(points.w);
+		$('#localPoints').text(points.b + ' points');
+		$('#foreingPoints').text(points.w + ' points');
 	}
 };
 
@@ -242,6 +242,11 @@ var showUsernames = function(){
 	$('#foreingUser').text(opponent);
 	$('#localAvatar').html('<img src="http://avatars.io/twitter/'+username+'">');
 	$('#foreingAvatar').html('<img src="http://avatars.io/twitter/'+opponent+'">');
+	$('#localTimer').show();
+	$('#foreingTimer').show();
+	$('#localPoints').show();
+	$('#foreingPoints').show();
+	$('.yield').show();
 };
 
 socket.on('activation'+idGame,function(m){
@@ -347,7 +352,7 @@ function startLTimer(duration, display, miliSeconds) {
 			}
 			miliSeconds = miliSeconds + 1000;
 		}
-		display.text(minutes + ":" + seconds);
+		display.text('Timer: '+minutes + ":" + seconds);
 		localMins = (parseInt(minutes) * 60) + parseInt(seconds);
 		lMseconds = miliSeconds;
 		if(localMins === 0){
@@ -381,7 +386,7 @@ function startFTimer(duration, display, miliSeconds) {
 		minutes = minutes < 10 ? "0" + minutes : minutes;
 		seconds = seconds < 10 ? "0" + seconds : seconds;
 
-		display.text(minutes + ":" + seconds);
+		display.text('Timer: ' + minutes + ":" + seconds);
 		if(miliSeconds >= 250){
 			miliSeconds = miliSeconds - 250;
 		}else{
@@ -413,4 +418,8 @@ var startFClock = function(){
 	}
 };
 //});
+$($($('#board')[0]).children()).children().removeAttr('style');
+$('#board').width('26.45%');
+$('#contentGame').css('margin-top',dHeight * .10);
 }
+

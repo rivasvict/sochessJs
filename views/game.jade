@@ -5,20 +5,29 @@ block content
 		head		
 			link(type="text/css",rel="stylesheet",href="/chessboard-0.3.0.css")
 			link(type="text/css",rel="stylesheet",href="/highlightMoves.css")
-
-	div#waiting-opponent
-	div#foreingAvatar
-	div#foreingUser
-	div#foreingTimer
-	div#foreingPoints
-	div(id='board',style="width: 400px")
-	div#localTimer
-	div#localPoints
-	div#localUser
-	div#localAvatar
-	form#form-game(method='post',action='/disconnection')
-		input#send-button(type='submit',value='Go to main page')
-
+	div#contentGame
+		div#waiting-opponent
+		div#top-user.user
+			div#foreingAvatar(class='pull-left avatar')
+			div#foreingUser(class='userName') 
+		div#foreingTimer(class='bro')
+			| Timer: 01:00
+		div#foreingPoints
+			| 0 points
+	
+		div(id='board',style="width: 400px")
+	
+		div#localTimer(class='bro')
+			| Timer: 01:00
+		div#localPoints
+			| 0 points
+		div#bottom-user.user
+			div#localAvatar(class='pull-left avatar')
+			div#localUser(class='userName')
+		div#yield-div
+			form#form-game(method='post',action='/disconnection')
+				input#send-button(type='submit',value='Yield!',class='yield')
+	
 	script(type="text/javascript",src="/main.js")
 	//
 		script(type="text/javascript",src="/jquery.min.js")
