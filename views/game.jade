@@ -5,11 +5,18 @@ block content
 		head		
 			link(type="text/css",rel="stylesheet",href="/chessboard-0.3.0.css")
 			link(type="text/css",rel="stylesheet",href="/highlightMoves.css")
+	div#bodyGame
+	div#whiteBack
 	div#contentGame
 		div#waiting-opponent
 		div#top-user.user
 			div#foreingAvatar(class='pull-left avatar')
-			div#foreingUser(class='userName') 
+			div#foreingUser(class='userName')
+			div#foreingTurn(class='lRibbon')
+				| Opponent's turn
+			div#foreingCheck(class='lRibbon check')
+				| Check!
+
 		div#foreingTimer(class='bro')
 			| Timer: 01:00
 		div#foreingPoints
@@ -24,6 +31,10 @@ block content
 		div#bottom-user.user
 			div#localAvatar(class='pull-left avatar')
 			div#localUser(class='userName')
+			div#localTurn(class='lRibbon turn')
+				| Your turn
+			div#localCheck(class='lRibbon check')
+				| Check!
 		div#yield-div
 			form#form-game(method='post',action='/disconnection')
 				input#send-button(type='submit',value='Yield!',class='yield')

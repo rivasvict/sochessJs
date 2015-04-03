@@ -258,8 +258,10 @@ socket.on('activation'+idGame,function(m){
 	$('#waiting-opponent').hide()
 	$('#board').show();
 	if(ort === 'white'){
+		$('#localTurn').show();
 		startLClock();
 	}else{
+		$('#foreingTurn').show();
 		startFClock();
 	}
 });
@@ -419,7 +421,9 @@ var startFClock = function(){
 };
 //});
 $($($('#board')[0]).children()).children().removeAttr('style');
-$('#board').width('26.45%');
+$($($('#board')[0]).children()).children().css('border','none');
+$('#board').width('52.5%');
 $('#contentGame').css('margin-top',dHeight * .10);
+$('#whiteBack').css('top',dHeight * .09);
 }
 
