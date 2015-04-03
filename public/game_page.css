@@ -12,6 +12,7 @@
 #yield-div{
 	float:left;
 	width:100%;
+	display:none;
 }
 
 #localTimer{
@@ -48,7 +49,6 @@
 .yield{
   margin-left: 10%;
   margin-top: 4px;
-	display:none;
 }
 
 #top-user{
@@ -73,7 +73,7 @@
 	z-index: -1;
 	width: 36%;
 	background-color: rgba(255, 255, 255, 0.68);
-	height: 500px;
+	height: 506px;
 	position: fixed;
 	left: 34%;
 	border-radius: 14px;
@@ -110,4 +110,80 @@
 
 #foreingCheck{
 	color: rgb(239, 255, 0);
+}
+
+.mainRibbon{
+	font-size: 23px;
+	z-index:2;
+	display:none;
+	width:27%;
+	height:80px;
+	background-color: rgba(255, 255, 255, 0.68);
+	position:fixed;
+	left:38.5%;
+	border-radius: 14px;
+	padding-top:5px;
+}
+
+#goBack{
+}
+
+#checkRibbonWon{
+	margin-left: 16%;
+	display:none;
+}
+
+#checkRibbonLost{
+	margin-left: 16%;
+	display:none;
+}
+
+#drawRibbon{
+  margin-left: 40%;
+	display:none;
+}
+
+#disconnectedRibbon{
+	margin-left: 3%;
+	display:none;
+}
+
+#opponentNoTime{
+	margin-left:10%;
+	display:none;
+}
+
+#youNoTime{
+	margin-left:10%;
+	display:none;
+}
+
+.ribbonLink{
+	margin-left: 16%;
+}
+
+.blockerDiv{
+	z-index: 1;
+	background-color: rgba(255, 255, 255, 0);
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	display:none;
+}
+
+.loading{
+	width: 25%;
+	margin-left: 6%;
+	margin-top: -7%;
+}
+
+#waiting-text{
+	
+}
+
+#waiting-opponent{
+	font-size: 19px;
+	margin-left: -6%;
 }

@@ -5,10 +5,28 @@ block content
 		head		
 			link(type="text/css",rel="stylesheet",href="/chessboard-0.3.0.css")
 			link(type="text/css",rel="stylesheet",href="/highlightMoves.css")
+	div.blockerDiv
 	div#bodyGame
 	div#whiteBack
 	div#contentGame
 		div#waiting-opponent
+		div.mainRibbon
+			div#checkRibbonWon
+				| Check mate, You won!			
+			div#checkRibbonLost
+				| Check mate, You lost!
+			div#drawRibbon
+				| Draw!
+			div#disconnectedRibbon
+				| Opponent disconnected, you won!	
+			div#opponentNoTime
+				| Opponent no time, you won!
+			div#youNoTime
+				| You ran out of time, you lost!
+
+			div#goBack
+				a(href='/',class='ribbonLink')
+					| Challenge someone else
 		div#top-user.user
 			div#foreingAvatar(class='pull-left avatar')
 			div#foreingUser(class='userName')
@@ -37,7 +55,7 @@ block content
 				| Check!
 		div#yield-div
 			form#form-game(method='post',action='/disconnection')
-				input#send-button(type='submit',value='Yield!',class='yield')
+				input#send-button(type='submit',value='Yield!',class='yield btn btn-danger')
 	
 	script(type="text/javascript",src="/main.js")
 	//

@@ -89,6 +89,42 @@ var punctuation = function(piece,target){
 	}
 };
 
+var showRibbon = function(){
+	$('.mainRibbon').show();
+	$('.blockerDiv').show();
+}
+
+var ribbonTrigger = {
+	foreingTimesUp : function(){
+			$('#opponentNoTime').show();
+			showRibbon();
+		},
+	localTimesUp : function(){
+			$('#youNoTime').show();
+			showRibbon();
+		},
+	checkWon : function(){
+			$('#checkRibbonWon').show();
+			stopWatch();
+			showRibbon();
+		},
+	checkLost : function(){
+			$('#checkRibbonLost').show();
+			stopWatch();
+			showRibbon();
+		},
+	draw : function(){
+			$('#drawRibbon').show();
+			stopWatch();
+			showRibbon();
+		},
+	disconnected : function(){
+			$('#disconnectedRibbon').show();
+			stopWatch();
+			showRibbon();
+		},
+}
+
 var onDrop = function(source, target) {
 
 
@@ -107,24 +143,45 @@ var onDrop = function(source, target) {
 
 	if(game.in_checkmate()){
 		if(winner === null){
-			alert('you won');
+			//alert('you won');
+			ribbonTrigger.checkWon();
 		}else{
-			alert('you lost');
+			//alert('you lost');
+			ribbonTrigger.checkLost();
 		}
 		socket.emit('cm'+idGame,returnWinner(game.turn));
 	}
 
+//Reset check ribbons
+	$('#localCheck').hide();
+	$('#foreingCheck').hide();
+
 	if(game.in_check()){
 		if(!game.in_checkmate()){
-			alert('check');
+			if(game.turn()==='b' && nplayer === '2'){
+			//alert('check');
+				$('#localCheck').show();
+			}
+			if(game.turn()==='w' && nplayer === '1'){
+				$('#localCheck').show();
+			}
+			if(game.turn()==='b' && nplayer === '1'){
+				$('#foreingCheck').show();
+			}
+			if(game.turn()==='w' && nplayer === '2'){
+				$('#foreingCheck').show();
+			}
 		}
 	};
 
 	if(game.in_draw()){
-		alert('Draw');
+		//alert('Draw');
+		ribbonTrigger.draw();
 	}
 
 	if(game.turn()==='b' && nplayer === '2'){
+		$('#localTurn').show();
+		$('#foreingTurn').hide();
 		startLClock();
 		clearInterval(foreingTrigger);
 		removeHighlights('black');
@@ -133,6 +190,8 @@ var onDrop = function(source, target) {
 	}
 	if(game.turn()==='w' && nplayer === '1'){
 		startLClock();
+		$('#localTurn').show();
+		$('#foreingTurn').hide();
 		clearInterval(foreingTrigger);
 		removeHighlights('white');
 		boardEl.find('.square-' + source).addClass('highlight-white');
@@ -141,9 +200,13 @@ var onDrop = function(source, target) {
 
 	if(game.turn()==='b' && nplayer === '1'){
 		startFClock();
+		$('#localTurn').hide();
+		$('#foreingTurn').show();
 		clearInterval(localTrigger);
 	}
 	if(game.turn()==='w' && nplayer === '2'){
+		$('#localTurn').hide();
+		$('#foreingTurn').show();
 		startFClock();
 		clearInterval(localTrigger);
 	}
@@ -246,7 +309,7 @@ var showUsernames = function(){
 	$('#foreingTimer').show();
 	$('#localPoints').show();
 	$('#foreingPoints').show();
-	$('.yield').show();
+	$('#yield-div').show();
 };
 
 socket.on('activation'+idGame,function(m){
@@ -280,7 +343,8 @@ socket.on('move'+idGame,function(m){
 });
 
 socket.on('dcnt'+idGame,function(m){
-	alert('You won, your opponent has left');
+	//alert('You won, your opponent has left');
+	ribbonTrigger.disconnected();
 	//socket.emit('user_disconnected'+idGame);
 	//socket.emit('disconnect'+idGame);
 });
@@ -325,7 +389,7 @@ var cfg = {
 var board = new ChessBoard('board',cfg);
 $('#board').hide();
 if(!started){
-	$('#waiting-opponent').html('Waiting for your opponent to connect');
+	$('#waiting-opponent').html('<div id="waiting-text">Waiting for your opponent to connect</div><div><img src="/img/loading.gif" class="loading"/></div>');
 }
 
 var localMins = 60;
@@ -358,13 +422,19 @@ function startLTimer(duration, display, miliSeconds) {
 		localMins = (parseInt(minutes) * 60) + parseInt(seconds);
 		lMseconds = miliSeconds;
 		if(localMins === 0){
-			alert('Time is up! You lost!');
+			//alert('Time is up! You lost!');
+			ribbonTrigger.localTimesUp();
 			clearInterval(foreingTrigger);
 			clearInterval(localTrigger);
 		}
 		localStarted = true;
 
 	}, 250);
+}
+
+var stopWatch = function() {
+	clearInterval(foreingTrigger);
+	clearInterval(localTrigger);
 }
 
 
@@ -402,7 +472,8 @@ function startFTimer(duration, display, miliSeconds) {
 		fMseconds = miliSeconds;
 
 		if(foreingMins === 0){
-			alert('Your opponent ran out of time! You won!');
+			//alert('Your opponent ran out of time! You won!');
+			ribbonTrigger.foreingTimesUp();
 			clearInterval(foreingTrigger);
 			clearInterval(localTrigger);
 		}
@@ -425,5 +496,6 @@ $($($('#board')[0]).children()).children().css('border','none');
 $('#board').width('52.5%');
 $('#contentGame').css('margin-top',dHeight * .10);
 $('#whiteBack').css('top',dHeight * .09);
+$('.mainRibbon').css('margin-top',dHeight * .23);
 }
 
