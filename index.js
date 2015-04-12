@@ -10,8 +10,42 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 var twitterAPI = require('node-twitter-api');
+var mongoose = require('mongoose');
+//var db = mongoose.connection;
 
 
+/*var testSchema = mongoose.Schema({
+	name:String,
+	age:String
+});*/
+
+//var test1 = mongoose.model('test1',testSchema);
+//mongoose.model('test1',{name:String,age:String});
+
+app.get('/dbtest',function(req,res, next){
+	mongoose.connect('mongodb://localhost/test',function(error){
+		if(error)
+		console.log(error);
+	});
+	var roo = mongoose.model('roo',{name: String});
+	var rou = new roo({name:'asdunodostres'});
+	/*rou.save(function(err){
+		if(err) console.log(err);	
+	});*/
+	/*roo.remove({name:'asdunodostres'},function(err){
+		if(err) console.log(err);
+	});*/
+	roo.find({name:'asdunodostres'},function(err,rous){
+		if (err) return console.log(err);
+		console.log(rous);
+		res.send(rous);
+	});
+	//res.sendStatus(200);
+/*	mongoose.model('test1').find(function(err,user){
+		res.send(user);
+	});*/
+
+});
 
 var user = {};
 
@@ -167,7 +201,8 @@ app.get('/callback/game/:gameId/op/:opponent/user/:userId/player/:playerN',funct
 
 app.get('/game/:gameId/op/:opponent/user/:userId/player/:playerN',function(req,res){
 	var roomExistance = roomsExist(req.params.gameId);
-	
+	console.log(roomExistance.players);
+	console.log(rooms);
 	if(req.cookies.user && roomExistance){
 	if(g.complete)
 		res.redirect('/');
@@ -181,11 +216,38 @@ app.get('/game/:gameId/op/:opponent/user/:userId/player/:playerN',function(req,r
 	io.on('connection', function(socket){
 		socket.on('user_connected',function(m){
 			if(!isConnected(socket.id)){
+				/* CONNECT TO DATABASE AND SHOW THE ID IN CONSOLE */
+				/*mongoose.connect('mongodb://localhost/chessTest',function(error){
+					if(error) console.log(error);
+				});*/
+				roo.find({id:req.params.gameId},function(err,rous){
+					if(err) console.log(err);
+
+					//adding details to the room
+
+					console.log('showing rous');
+					console.log(m.player_number);
+					if(m.player_number === '1'){
+						roo.update({id:req.params.gameId},{players:[[socket.id,req.params.userId],['','']]},function(err){
+							if(err) console.log(err);
+							console.log(rous[0]);
+						});
+					}else{
+						console.log(rous[0].players);
+						roo.update({id:req.params.gameId},{players:[/*[socket.id,req.params.userId]*/rous[0].players[0],[socket.id,req.params.opponent]]},function(err){
+							if(err) console.log(err);
+							console.log(rous[0]);
+						});
+					}
+
+
+				});
+				if (req.params.playerN === '2') mongoose.disconnect();
 				loginR(socket.id,m.roomId,m.uname);
 				socket.join(m.roomId);
 			}
 			if(m.player_number === '2'){
-				io.to(m.roomId).emit('activation'+m.roomId,{});
+				io.to(m.roomId).emit('activation'+m.roomId,{room:rooms});
 			}
 			//io.to(req.params.gameId).emit('sendo'+req.params.gameId,rooms);
 		});
@@ -205,7 +267,7 @@ app.get('/game/:gameId/op/:opponent/user/:userId/player/:playerN',function(req,r
 		});
 	});
 	}else{
-		res.redirect("/auth/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN);
+		!roomExistance ? res.sendStatus(404) : res.redirect("/auth/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN);
 	}
 });
 
@@ -261,10 +323,36 @@ var roomsExist = function(rname){
 	return false;
 }
 
-app.post('/validation',function(req,res){
-	//res.redirect('/game/:gameId');
+var testSchema = new mongoose.Schema({id: String, players: Array});
 
+var roo = mongoose.model('roo',testSchema);
+
+app.post('/validation',function(req,res){
 	var roomNameId = generateId();
+	//res.redirect('/game/:gameId');
+	mongoose.connect('mongodb://localhost/chessTest',function(error){
+		if(error)
+		console.log(error);
+	});
+	var rou = new roo({id:roomNameId, players:[[],[]]});
+	rou.save(function(err){
+		if(err) console.log(err);	
+	});
+	/*roo.remove({name:'asdunodostres'},function(err){
+		if(err) console.log(err);
+	});*/
+	roo.find({},function(err,rous){
+		if (err) return console.log(err);
+		console.log(rous);
+		//res.send(rous);
+	});
+	//mongoose.disconnect();
+	//res.sendStatus(200);
+/*	mongoose.model('test1').find(function(err,user){
+		res.send(user);
+	});*/
+
+
 	var watchman = entrance(roomNameId);
 	if(!watchman[0]){
 		res.sendStatus(403);
