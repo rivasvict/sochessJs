@@ -10,8 +10,46 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 var twitterAPI = require('node-twitter-api');
+var mongoose = require('mongoose');
+//var db = mongoose.connection;
+	mongoose.connect('mongodb://localhost/chessTest',function(error){
+		if(error)
+		console.log(error);
+	});
 
 
+/*var testSchema = mongoose.Schema({
+	name:String,
+	age:String
+});*/
+
+//var test1 = mongoose.model('test1',testSchema);
+//mongoose.model('test1',{name:String,age:String});
+
+app.get('/dbtest',function(req,res, next){
+	mongoose.connect('mongodb://localhost/test',function(error){
+		if(error)
+		console.log(error);
+	});
+	var roo = mongoose.model('roo',{name: String});
+	var rou = new roo({name:'asdunodostres'});
+	/*rou.save(function(err){
+		if(err) console.log(err);	
+	});*/
+	/*roo.remove({name:'asdunodostres'},function(err){
+		if(err) console.log(err);
+	});*/
+	roo.find({name:'asdunodostres'},function(err,rous){
+		if (err) return console.log(err);
+		console.log(rous);
+		res.send(rous);
+	});
+	//res.sendStatus(200);
+/*	mongoose.model('test1').find(function(err,user){
+		res.send(user);
+	});*/
+
+});
 
 var user = {};
 
@@ -103,6 +141,16 @@ var roomName = function(query){
 	}
 }
 
+var rName = function(query,roomObject){
+	for(var i in roomObject){
+		for(var j in roomObject[i].players){
+			if(roomObject[i].players[j][0]===query){
+				return roomObject[i].id;
+			}
+		}
+	}
+}
+
 var isConnected = function(player){
 	for(var i in rooms){
 		for(var j in rooms[i].players){
@@ -167,8 +215,10 @@ app.get('/callback/game/:gameId/op/:opponent/user/:userId/player/:playerN',funct
 
 app.get('/game/:gameId/op/:opponent/user/:userId/player/:playerN',function(req,res){
 	var roomExistance = roomsExist(req.params.gameId);
-	
-	if(req.cookies.user && roomExistance){
+	//console.log(roomExistance.players);
+
+	roo.find({},function(err,rous){
+	if(req.cookies.user && rExist(req.params.gameId,rous)){
 	if(g.complete)
 		res.redirect('/');
 	if(un===2)
@@ -181,11 +231,36 @@ app.get('/game/:gameId/op/:opponent/user/:userId/player/:playerN',function(req,r
 	io.on('connection', function(socket){
 		socket.on('user_connected',function(m){
 			if(!isConnected(socket.id)){
+				/* CONNECT TO DATABASE AND SHOW THE ID IN CONSOLE */
+				/*mongoose.connect('mongodb://localhost/chessTest',function(error){
+					if(error) console.log(error);
+				});*/
+
+				roo.find({id:m.roomId},function(err,rous){
+					if(err) console.log(err);
+
+					//adding details to the room
+					if(m.player_number === '1'){
+
+						roo.update({id:m.roomId},{players:[[socket.id,req.params.userId],['','']]},function(err){
+							if(err) console.log(err);
+						});
+					}else{
+						//console.log('showing rous');
+						//console.log(rous);
+						roo.update({id:m.roomId},{players:[/*[socket.id,req.params.userId]*/rous[0].players[0],[socket.id,req.params.opponent]]},function(err){
+							if(err) console.log(err);
+						});
+					}
+
+
+				});
+				//if (req.params.playerN === '2') mongoose.disconnect();
 				loginR(socket.id,m.roomId,m.uname);
 				socket.join(m.roomId);
 			}
 			if(m.player_number === '2'){
-				io.to(m.roomId).emit('activation'+m.roomId,{});
+				io.to(m.roomId).emit('activation'+m.roomId,{room:rooms});
 			}
 			//io.to(req.params.gameId).emit('sendo'+req.params.gameId,rooms);
 		});
@@ -197,16 +272,28 @@ app.get('/game/:gameId/op/:opponent/user/:userId/player/:playerN',function(req,r
 			io.to(req.params.gameId).emit('checkMate'+req.params.gameId,m);
 		});
 		socket.on('disconnect',function(){
-			room_id = roomName(socket.id);
-			deleteElement(room_id);
-			io.to(room_id).emit('dcnt'+room_id,'dsº');
+			//room_id = roomName(socket.id);
+
+//			deleteElement(room_id);
+
+				roo.find({},function(err,rous){
+					if(err) console.log(err);
+					var room_id = rName(socket.id,rous);
+					roo.findOneAndRemove({id:room_id},function(err){if(err)console.log(err);});
+					
+					io.to(room_id).emit('dcnt'+room_id,'dsº');
+
+				});
+
+
 		});
 		socket.on('user_disconnected'+req.params.gameId,function(m){
 		});
 	});
 	}else{
-		res.redirect("/auth/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN);
+		!roomExistance ? res.sendStatus(404) : res.redirect("/auth/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN);
 	}
+	});
 });
 
 app.get('/',ensureLoggedIn('/auth/twitter'),function(req,res){
@@ -261,10 +348,46 @@ var roomsExist = function(rname){
 	return false;
 }
 
-app.post('/validation',function(req,res){
-	//res.redirect('/game/:gameId');
+var rExist = function(rname,rObject){
+	for(var i in rObject){
+		if(rObject[i].id===rname){
+			return true;
+		}
+	}
+	return false;
+}
 
+var testSchema = new mongoose.Schema({id: String, players: Array});
+
+var roo = mongoose.model('roo',testSchema);
+
+app.post('/validation',function(req,res){
 	var roomNameId = generateId();
+	//res.redirect('/game/:gameId');
+/*	mongoose.connect('mongodb://localhost/chessTest',function(error){
+		if(error)
+		console.log(error);
+	});*/
+
+	var rou = new roo({id:roomNameId, players:[[],[]]});
+	rou.save(function(err){
+		if(err) console.log(err);	
+	});
+	/*roo.remove({name:'asdunodostres'},function(err){
+		if(err) console.log(err);
+	});*/
+	roo.find({},function(err,rous){
+		if (err) return console.log(err);
+		console.log(rous);
+		//res.send(rous);
+	});
+
+	//res.sendStatus(200);
+/*	mongoose.model('test1').find(function(err,user){
+		res.send(user);
+	});*/
+
+
 	var watchman = entrance(roomNameId);
 	if(!watchman[0]){
 		res.sendStatus(403);

@@ -313,8 +313,9 @@ var showUsernames = function(){
 };
 
 socket.on('activation'+idGame,function(m){
+	console.log(m.room);
 	$.get('http://avatars.io/twitter/'+username,function(data){
-		console.log(data);
+		//console.log(data);
 	});
 	showUsernames();
 	started = true;
@@ -333,7 +334,7 @@ socket.on('sendo'+idGame,function(m){
 	console.log(m);
 });
 
-console.log(idGame);
+//console.log(idGame);
 
 socket.on('move'+idGame,function(m){
 	//      THIS IS A VIRTUAL MOVE THAT EMULATES USER A MOVE WITH onDrop() and onSnapEnd()
