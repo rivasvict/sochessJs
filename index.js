@@ -12,7 +12,8 @@ var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 var twitterAPI = require('node-twitter-api');
 var mongoose = require('mongoose');
 //var db = mongoose.connection;
-	mongoose.connect('mongodb://localhost/chessTest',function(error){
+	//mongoose.connect('mongodb://localhost/chessTest',function(error){
+	mongoose.connect('mongodb://vctr:190904enriva@ds061601.mongolab.com:61601/heroku_app34055791',function(error){
 		if(error)
 		console.log(error);
 	});
@@ -27,7 +28,8 @@ var mongoose = require('mongoose');
 //mongoose.model('test1',{name:String,age:String});
 
 app.get('/dbtest',function(req,res, next){
-	mongoose.connect('mongodb://localhost/test',function(error){
+	//mongoose.connect('mongodb://localhost/test',function(error){
+	mongoose.connect('mongodb://vctr:190904enriva@ds061601.mongolab.com:61601/heroku_app34055791',function(error){
 		if(error)
 		console.log(error);
 	});
