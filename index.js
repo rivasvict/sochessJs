@@ -313,9 +313,9 @@ app.get('/',ensureLoggedIn('/auth/twitter'),function(req,res){
 	}
 });
 
-app.get('/root',function(req,res){
+/*app.get('/root',function(req,res){
 	res.render('index');
-});
+});*/
 
 var rooms = [];
 

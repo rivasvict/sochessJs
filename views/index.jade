@@ -9,6 +9,7 @@ block content
 			img.userTavatar(src='http://avatars.io/twitter/#{id}')
 		div.logoContainer
 			div#logo
+				img(src='/img/sochesslog.png')
 		form#form-create-game(method='post',action='/validation',class='center')
 			input#user-id(type='hidden',name='userId',value='#{id}',readonly)
 			div#challengueTittle(class='challengeCls')
