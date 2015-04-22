@@ -7,11 +7,14 @@ block content
 			b
 				@#{id}
 			img.userTavatar(src='http://avatars.io/twitter/#{id}')
+		div.logoContainer
+			div#logo
 		form#form-create-game(method='post',action='/validation',class='center')
 			input#user-id(type='hidden',name='userId',value='#{id}',readonly)
 			div#challengueTittle(class='challengeCls')
 				| Challenge a friend from Twitter
 			div#challengeBox(class='challengeCls')
+				| @ 
 				input#user_challenge(type='text',name='uChallenge')
 			div#challengeButton(class='challengeCls')
 				input#send-button1(type='submit',value='Challenge',class='btn btn-primary btn-lg')
