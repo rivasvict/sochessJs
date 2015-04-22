@@ -12,8 +12,8 @@ var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 var twitterAPI = require('node-twitter-api');
 var mongoose = require('mongoose');
 //var db = mongoose.connection;
-	mongoose.connect('mongodb://localhost/chessTest',function(error){
-	//mongoose.connect('mongodb://vctr:190904enriva@ds061601.mongolab.com:61601/heroku_app34055791',function(error){
+	//mongoose.connect('mongodb://localhost/chessTest',function(error){
+	mongoose.connect('mongodb://vctr:190904enriva@ds061601.mongolab.com:61601/heroku_app34055791',function(error){
 		if(error)
 		console.log(error);
 	});
@@ -74,8 +74,8 @@ passport.use(new TwitterStrategy({
     consumerKey: '5WcVdkvcBv0FNjzelpsObRlEn',
     consumerSecret: 'WsHHqEB5NstRy9125d7KjCUG2OJtLwox1c8wEoVlCFXEoQr367',
     //callbackURL: "http://sochessJs.herokuapp.com/"
-    //callbackURL: "https://sochessJs.herokuapp.com/auth/twitter/callback"
-    callbackURL: "http://tests.sochessJs.com:5000/auth/twitter/callback"
+    callbackURL: "https://sochessJs.herokuapp.com/auth/twitter/callback"
+    //callbackURL: "http://tests.sochessJs.com:5000/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
 		user.tokenS=tokenSecret;
@@ -187,8 +187,8 @@ app.get('/auth/game/:gameId/op/:opponent/user/:userId/player/:playerN',function(
 	passport.authenticate(
 		'twitter',
 		{
-			//callbackURL: "https://sochessJs.herokuapp.com/callback/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN
-			callbackURL: "http://tests.sochessJs.com:5000/callback/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN
+			callbackURL: "https://sochessJs.herokuapp.com/callback/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN
+			//callbackURL: "http://tests.sochessJs.com:5000/callback/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN
 		}
 	)(req,res,next);
 });
@@ -399,8 +399,8 @@ app.post('/validation',function(req,res){
 		res.sendStatus(403);
 	}else{
 		twitter.statuses('update',{
-			//status:"I have challenged you @"+req.body.uChallenge+" https://sochessJs.herokuapp.com/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2"
-			status:"I have challenged you @"+req.body.uChallenge+" http://tests.sochessJs.com:5000/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2"
+			status:"I have challenged you @"+req.body.uChallenge+" https://sochessJs.herokuapp.com/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2"
+			//status:"I have challenged you @"+req.body.uChallenge+" http://tests.sochessJs.com:5000/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2"
 		},req.cookies.token,req.cookies.tokenS,function(error,data,response){
 			if(error){
 				console.log(error);
