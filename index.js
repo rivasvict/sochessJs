@@ -12,8 +12,8 @@ var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 var twitterAPI = require('node-twitter-api');
 var mongoose = require('mongoose');
 //var db = mongoose.connection;
-	//mongoose.connect('mongodb://localhost/chessTest',function(error){
-	mongoose.connect('mongodb://vctr:190904enriva@ds061601.mongolab.com:61601/heroku_app34055791',function(error){
+	mongoose.connect('mongodb://localhost/chessTest',function(error){
+	//mongoose.connect('mongodb://vctr:190904enriva@ds061601.mongolab.com:61601/heroku_app34055791',function(error){
 		if(error)
 		console.log(error);
 	});
@@ -71,11 +71,10 @@ passport.deserializeUser(function(id, done) {
 });
 
 passport.use(new TwitterStrategy({
-    consumerKey: '5WcVdkvcBv0FNjzelpsObRlEn',
-    consumerSecret: 'WsHHqEB5NstRy9125d7KjCUG2OJtLwox1c8wEoVlCFXEoQr367',
-    //callbackURL: "http://sochessJs.herokuapp.com/"
-    callbackURL: "https://sochessJs.herokuapp.com/auth/twitter/callback"
-    //callbackURL: "http://tests.sochessJs.com:5000/auth/twitter/callback"
+    consumerKey: 'lAPfDOUThrZtn7MC2jKl3KIP4',
+    consumerSecret: 'I32InqgYeyVS3nIBIWNwJdckF56EknAkjZq9pNu9RaJleJzi9d',
+    //callbackURL: "https://sochessJs.herokuapp.com/auth/twitter/callback"
+    callbackURL: "http://tests.sochessJs.com:5000/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
 		user.tokenS=tokenSecret;
@@ -92,8 +91,10 @@ passport.use(new TwitterStrategy({
 ));
 
 var twitter = new twitterAPI({
-	consumerKey: '5WcVdkvcBv0FNjzelpsObRlEn',
-	consumerSecret: 'WsHHqEB5NstRy9125d7KjCUG2OJtLwox1c8wEoVlCFXEoQr367'/*,
+	consumerKey: 'lAPfDOUThrZtn7MC2jKl3KIP4',
+	consumerSecret: 'I32InqgYeyVS3nIBIWNwJdckF56EknAkjZq9pNu9RaJleJzi9d'
+
+/*,
 	callback: 'http://tests.sochessJs.com:5000/auth/twitter/callback'*/
 });
 
@@ -187,8 +188,8 @@ app.get('/auth/game/:gameId/op/:opponent/user/:userId/player/:playerN',function(
 	passport.authenticate(
 		'twitter',
 		{
-			callbackURL: "https://sochessJs.herokuapp.com/callback/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN
-			//callbackURL: "http://tests.sochessJs.com:5000/callback/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN
+			//callbackURL: "https://sochessJs.herokuapp.com/callback/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN
+			callbackURL: "http://tests.sochessJs.com:5000/callback/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN
 		}
 	)(req,res,next);
 });
@@ -399,15 +400,16 @@ app.post('/validation',function(req,res){
 		res.sendStatus(403);
 	}else{
 		twitter.statuses('update',{
-			status:"I have challenged you @"+req.body.uChallenge+" https://sochessJs.herokuapp.com/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2"
-			//status:"I have challenged you @"+req.body.uChallenge+" http://tests.sochessJs.com:5000/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2"
-		},req.cookies.token,req.cookies.tokenS,function(error,data,response){
+			//status:req.body.userId+" has challenged you @"+req.body.uChallenge+" go to -> https://sochessJs.herokuapp.com/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2"
+			status:	req.body.userId+" has challenged you @"+req.body.uChallenge+" go to -> http://tests.sochessJs.com:5000/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2"
+		},'3168152808-7bEM5qVUmCk64h0J8DrP6NlWodVXVmdtSpLC8HR','ju9sfDTph4a3sdlGzEAr8CXjNBAi2NfccFHaIt16DkzgY',function(error,data,response){
 			if(error){
 				console.log(error);
 			}else{
 				console.log('succeeded');
 			}
 		});
+
 
 		res.redirect('/game/'+roomNameId+'/op/'+req.body.uChallenge+'/user/'+req.body.userId+'/player/'+watchman[1]);
 	}
