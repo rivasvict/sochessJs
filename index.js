@@ -180,10 +180,6 @@ var generateId = function(){
 	return roomId;
 }
 
-app.get('/user/:user',function(req,res){
-	
-});
-
 app.get('/auth/game/:gameId/op/:opponent/user/:userId/player/:playerN',function(req,res,next){
 	passport.authenticate(
 		'twitter',
