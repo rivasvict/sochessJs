@@ -11,9 +11,27 @@ var session = require('express-session');
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 var twitterAPI = require('node-twitter-api');
 var mongoose = require('mongoose');
+
+var mongoUrl = '';
+var authTwitterCallback = '';
+
+var switchEnv = function(env){
+	if(env==='local'){
+		mongoUrl = 'mongodb://localhost/chessTest';
+		authTwitterCallback = 'http://tests.sochessJs.com:5000/auth/twitter/callback';
+	}else{
+		mongoUrl = 'mongodb://vctr:190904enriva@ds061601.mongolab.com:61601/heroku_app34055791';
+		authTwitterCallback = 'https://sochessJs.herokuapp.com/auth/twitter/callback';
+	}
+	return env;
+}
+
+var environment = switchEnv('local');
+
 //var db = mongoose.connection;
+	mongoose.connect(mongoUrl,function(error){
 	//mongoose.connect('mongodb://localhost/chessTest',function(error){
-	mongoose.connect('mongodb://vctr:190904enriva@ds061601.mongolab.com:61601/heroku_app34055791',function(error){
+	//mongoose.connect('mongodb://vctr:190904enriva@ds061601.mongolab.com:61601/heroku_app34055791',function(error){
 		if(error)
 		console.log(error);
 	});
@@ -28,8 +46,9 @@ var mongoose = require('mongoose');
 //mongoose.model('test1',{name:String,age:String});
 
 app.get('/dbtest',function(req,res, next){
+	mongoose.connect(mongoUrl,function(error){
 	//mongoose.connect('mongodb://localhost/test',function(error){
-	mongoose.connect('mongodb://vctr:190904enriva@ds061601.mongolab.com:61601/heroku_app34055791',function(error){
+	//mongoose.connect('mongodb://vctr:190904enriva@ds061601.mongolab.com:61601/heroku_app34055791',function(error){
 		if(error)
 		console.log(error);
 	});
@@ -73,7 +92,8 @@ passport.deserializeUser(function(id, done) {
 passport.use(new TwitterStrategy({
     consumerKey: 'lAPfDOUThrZtn7MC2jKl3KIP4',
     consumerSecret: 'I32InqgYeyVS3nIBIWNwJdckF56EknAkjZq9pNu9RaJleJzi9d',
-    callbackURL: "https://sochessJs.herokuapp.com/auth/twitter/callback"
+    callbackURL: authTwitterCallback
+    //callbackURL: "https://sochessJs.herokuapp.com/auth/twitter/callback"
     //callbackURL: "http://tests.sochessJs.com:5000/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
@@ -181,10 +201,16 @@ var generateId = function(){
 }
 
 app.get('/auth/game/:gameId/op/:opponent/user/:userId/player/:playerN',function(req,res,next){
+	if(environment === 'local'){
+		var clBack = "http://tests.sochessJs.com:5000/callback/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN;
+	}else{
+		var clBack ="https://sochessJs.herokuapp.com/callback/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN;
+	}
 	passport.authenticate(
 		'twitter',
 		{
-			callbackURL: "https://sochessJs.herokuapp.com/callback/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN
+			callbackURL: clBack
+			//callbackURL: "https://sochessJs.herokuapp.com/callback/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN
 			//callbackURL: "http://tests.sochessJs.com:5000/callback/game/"+req.params.gameId+"/op/"+req.params.opponent+"/user/"+req.params.userId+"/player/"+req.params.playerN
 		}
 	)(req,res,next);
@@ -392,11 +418,17 @@ app.post('/validation',function(req,res){
 
 
 	var watchman = entrance(roomNameId);
+	if(environment==='local'){
+		var sts = req.body.userId+" has challenged you @"+req.body.uChallenge+" go to -> http://tests.sochessJs.com:5000/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2";
+	}else{
+		var sts = req.body.userId+" has challenged you @"+req.body.uChallenge+" go to -> https://sochessJs.herokuapp.com/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2";
+	}
 	if(!watchman[0]){
 		res.sendStatus(403);
 	}else{
 		twitter.statuses('update',{
-			status:req.body.userId+" has challenged you @"+req.body.uChallenge+" go to -> https://sochessJs.herokuapp.com/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2"
+			status:sts
+			//status:req.body.userId+" has challenged you @"+req.body.uChallenge+" go to -> https://sochessJs.herokuapp.com/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2"
 			//status:	req.body.userId+" has challenged you @"+req.body.uChallenge+" go to -> http://tests.sochessJs.com:5000/game/"+roomNameId+"/op/"+req.body.userId+"/user/"+req.body.uChallenge+"/player/2"
 		},'3168152808-7bEM5qVUmCk64h0J8DrP6NlWodVXVmdtSpLC8HR','ju9sfDTph4a3sdlGzEAr8CXjNBAi2NfccFHaIt16DkzgY',function(error,data,response){
 			if(error){
