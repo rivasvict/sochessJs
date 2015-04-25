@@ -18,7 +18,6 @@
   border-radius: 6px;
   margin-left: 37%;
   position: absolute;
-  top: 21px;
 }
 
 #game_logo{
@@ -36,6 +35,7 @@
 	margin-left: 33%;
 	border-radius: 14px;
 	position: absolute;
+	top:170px;
 }
 
 .center{

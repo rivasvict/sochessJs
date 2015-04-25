@@ -492,6 +492,9 @@ var startFClock = function(){
 	}
 };
 //});
+
+// STYLES THAT DEPEND ON HEIGHT MEASUREMENT
+
 $($($('#board')[0]).children()).children().removeAttr('style');
 $($($('#board')[0]).children()).children().css('border','none');
 $('#board').width('52.5%');
@@ -499,4 +502,3 @@ $('#contentGame').css('margin-top',dHeight * .10);
 $('#whiteBack').css('top',dHeight * .09);
 $('.mainRibbon').css('margin-top',dHeight * .23);
 }
-

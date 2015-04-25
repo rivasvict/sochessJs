@@ -26,6 +26,8 @@ var switchEnv = function(env){
 	return env;
 }
 
+// Set local to use local urls and nothing for remote
+
 var environment = switchEnv('local');
 
 //var db = mongoose.connection;
