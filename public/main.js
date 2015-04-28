@@ -498,7 +498,34 @@ var startFClock = function(){
 $($($('#board')[0]).children()).children().removeAttr('style');
 $($($('#board')[0]).children()).children().css('border','none');
 $('#board').width('52.5%');
-$('#contentGame').css('margin-top',dHeight * .10);
-$('#whiteBack').css('top',dHeight * .09);
 $('.mainRibbon').css('margin-top',dHeight * .23);
+if(dHeight<591){
+	$('#whiteBack').css('top',0);
+	$('#contentGame').css('margin-top',10);
+}else{
+	$('#whiteBack').css('top',dHeight * .06);
+	$('#contentGame').css('margin-top',dHeight * .07);
+}
+
+dWidth = $(window).width();
+
+if(dWidth<580){
+	$('#board').css('width',dWidth * 0.795);
+}
+
+$(window).resize(function(){
+	dHeight = $(window).height();
+	if(dHeight<591){
+		$('#whiteBack').css('top',0);
+		$('#contentGame').css('margin-top',10);
+	}else{
+		$('#whiteBack').css('top',dHeight * .06);
+		$('#contentGame').css('margin-top',dHeight * .07);
+	}
+	if(dWidth<580){
+		$('#board').css('width',dWidth * 0.795);
+	}else{
+		$('#board').css('width','initial');
+	}
+});
 }
