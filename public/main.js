@@ -507,14 +507,17 @@ if(dHeight<591){
 	$('#contentGame').css('margin-top',dHeight * .07);
 }
 
-dWidth = $(window).width();
+var dWidth = $(window).width();
 
 if(dWidth<580){
-	$('#board').css('width',dWidth * 0.795);
+	$('#board').css('width',dWidth * 0.50);
+	$('#board').css('margin-left',(dWidth - 294)/4);
+//	$('#board').css('margin-left',(dWidth - -400)/2);
 }
 
 $(window).resize(function(){
 	dHeight = $(window).height();
+	dWidth = $(window).width();
 	if(dHeight<591){
 		$('#whiteBack').css('top',0);
 		$('#contentGame').css('margin-top',10);
@@ -523,9 +526,12 @@ $(window).resize(function(){
 		$('#contentGame').css('margin-top',dHeight * .07);
 	}
 	if(dWidth<580){
-		$('#board').css('width',dWidth * 0.795);
+		$('#board').css('width',dWidth * 0.5);
+		$('#board').css('margin-left',(dWidth - 294)/4);
+		console.log((dWidth - 294)/2);
 	}else{
 		$('#board').css('width','initial');
+		$('#board').css('margin-left','initial');
 	}
 });
 }

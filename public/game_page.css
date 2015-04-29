@@ -118,7 +118,7 @@
 	z-index:2;
 	display:none;
 	width:27%;
-	height:80px;
+	height:111px;
 	background-color: rgba(255, 255, 255, 0.68);
 	position:fixed;
 	left:38.5%;
@@ -209,7 +209,25 @@
 	#board{
 	/*
 		width: 79.5%!important;
-	*/
 		margin-left: 10%;
+		*/
+	}
+	#foreingTurn	{
+		margin-left:52%;
+	}
+	#localTurn{
+		margin-left:57%;
+	}
+	.bro{
+		margin-right: 20%;
+		margin-left: 8%;
+	}
+	#yield-div{
+		margin-left: 29%;
+		width:0%;
+	}
+	.mainRibbon{
+		width: 88%;
+		left: 7.5%;
 	}
 }
