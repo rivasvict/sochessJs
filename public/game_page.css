@@ -230,4 +230,17 @@
 		width: 88%;
 		left: 7.5%;
 	}
+	#goBack{
+		text-align:center!important;
+		margin-left:-21%!important;
+	}
+	#form-create-game{
+		margin-left: 4%;
+		width:93%;
+	}
+	.logoContainer{
+		position:initial;
+		float: right;
+		background-color:initial;
+	}
 }
