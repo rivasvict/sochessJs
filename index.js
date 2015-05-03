@@ -32,7 +32,7 @@ app.get('/tst',function(req,res){
 
 // Set local to use local urls and nothing for remote
 
-var environment = switchEnv();
+var environment = switchEnv('local');
 
 //var db = mongoose.connection;
 	mongoose.connect(mongoUrl,function(error){

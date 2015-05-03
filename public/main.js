@@ -497,37 +497,38 @@ var startFClock = function(){
 
 $($($('#board')[0]).children()).children().removeAttr('style');
 $($($('#board')[0]).children()).children().css('border','none');
-$('#board').width('52.5%');
+$('#board').width('100%');
 $('.mainRibbon').css('margin-top',dHeight * .23);
 if(dHeight<591){
 	$('#whiteBack').css('top',0);
 	$('#contentGame').css('margin-top',10);
 }else{
 	$('#whiteBack').css('top',dHeight * .06);
-	$('#contentGame').css('margin-top',dHeight * .07);
+	//$('#contentGame').css('margin-top',dHeight * .07);
 }
 
 var dWidth = $(window).width();
+var whiteW = $('#whiteBack').width();
 
+$('.gameElements').css('margin-left',(whiteW - 294)/2);
 if(dWidth<580){
-	$('#board').css('width',dWidth * 0.80);
-	$('#board').css('margin-left',(dWidth - 294)/4);
+	//$('#board').css('width',dWidth * 0.1);
+	$('.gameElements').css('margin-left',(whiteW - 294)/2);
 //	$('#board').css('margin-left',(dWidth - -400)/2);
 }
 
 $(window).resize(function(){
 	dHeight = $(window).height();
 	dWidth = $(window).width();
+	whiteW = $('#whiteBack').width();
 	if(dHeight<591){
 		$('#whiteBack').css('top',0);
 		$('#contentGame').css('margin-top',10);
 	}else{
 		$('#whiteBack').css('top',dHeight * .06);
-		$('#contentGame').css('margin-top',dHeight * .07);
 	}
 	if(dWidth<580){
-		$('#board').css('width',dWidth * 0.8);
-		$('#board').css('margin-left',(dWidth - 294)/4);
+		$('.gameElements').css('margin-left',(whiteW - 294)/2);
 	}else{
 		$('#board').css('width','initial');
 		$('#board').css('margin-left','initial');
