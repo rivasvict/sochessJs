@@ -498,22 +498,28 @@ var startFClock = function(){
 $($($('#board')[0]).children()).children().removeAttr('style');
 $($($('#board')[0]).children()).children().css('border','none');
 $('#board').width('100%');
-$('.mainRibbon').css('margin-top',dHeight * .23);
+$('.mainRibbon').css('margin-top',dHeight * .35);
 if(dHeight<591){
 	$('#whiteBack').css('top',0);
 	$('#contentGame').css('margin-top',10);
+		if(dHeight<549){
+			$('.contact').css('position','relative');
+			$('.contact').css('margin-top',600);
+		}
 }else{
 	$('#whiteBack').css('top',dHeight * .06);
+	if(dHeight>549)
+		$('.contact').css('position','fixed');
 	//$('#contentGame').css('margin-top',dHeight * .07);
 }
 
 var dWidth = $(window).width();
 var whiteW = $('#whiteBack').width();
 
-$('.gameElements').css('margin-left',(whiteW - 294)/2);
+$('.gameElements').css('margin-left',(whiteW - 197)/2);
 if(dWidth<580){
 	//$('#board').css('width',dWidth * 0.1);
-	$('.gameElements').css('margin-left',(whiteW - 294)/2);
+	$('.gameElements').css('margin-left',(whiteW - 197)/2);
 //	$('#board').css('margin-left',(dWidth - -400)/2);
 }
 
@@ -524,12 +530,19 @@ $(window).resize(function(){
 	if(dHeight<591){
 		$('#whiteBack').css('top',0);
 		$('#contentGame').css('margin-top',10);
+		if(dHeight<549){
+			$('.contact').css('position','initial!important');
+			$('.contact').css('margin-top',600);
+		}
 	}else{
+		if(dHeight>549)
+			$('.contact').css('position','fixed');
 		$('#whiteBack').css('top',dHeight * .06);
 	}
 	if(dWidth<580){
-		$('.gameElements').css('margin-left',(whiteW - 294)/2);
+		$('.gameElements').css('margin-left',(whiteW - 197)/2);
 	}else{
+		$('.gameElements').css('margin-left',(whiteW - 197)/2);
 		$('#board').css('width','initial');
 		$('#board').css('margin-left','initial');
 	}

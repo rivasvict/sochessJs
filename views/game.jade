@@ -7,26 +7,27 @@ block content
 			link(type="text/css",rel="stylesheet",href="/highlightMoves.css")
 	div.blockerDiv
 	div#bodyGame
+	div.mainRibbon
+		div#checkRibbonWon
+			| Check mate, You won!			
+		div#checkRibbonLost
+			| Check mate, You lost!
+		div#drawRibbon
+			| Draw!
+		div#disconnectedRibbon
+			| Opponent disconnected, you won!	
+		div#opponentNoTime
+			| Opponent no time, you won!
+		div#youNoTime
+			| You ran out of time, you lost!
+
+		div#goBack
+			a(href='/',class='ribbonLink')
+				| Challenge someone else
+
 	div#whiteBack
 		div#contentGame
 			div#waiting-opponent
-			div.mainRibbon
-				div#checkRibbonWon
-					| Check mate, You won!			
-				div#checkRibbonLost
-					| Check mate, You lost!
-				div#drawRibbon
-					| Draw!
-				div#disconnectedRibbon
-					| Opponent disconnected, you won!	
-				div#opponentNoTime
-					| Opponent no time, you won!
-				div#youNoTime
-					| You ran out of time, you lost!
-
-				div#goBack
-					a(href='/',class='ribbonLink')
-						| Challenge someone else
 			div#top-user.user
 				div.userWrap
 					div#foreingAvatar(class='pull-left avatar')

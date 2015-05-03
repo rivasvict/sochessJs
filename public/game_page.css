@@ -37,7 +37,7 @@
 
 .bro{
 	float: left;
-	margin-right: 18%;
+	margin-right: 65px;
 }
 
 .userName{
@@ -212,16 +212,17 @@
 		left:4%;
 	}
 	#waiting-text{
-		width:57%;
+		//width:57%;
 	}
 	#waiting-opponent{
-		margin-left: 12%;
+		//margin-left: 12%;
 	}
 	.loading{
-		 margin-left: 16%;
+		 //margin-left: 16%;
+		margin-top:-15px;
 	}
 	#contentGame{
-		margin-left: 19%;
+	//	margin-left: 19%;
 	}
 	#board{
 	/*
@@ -230,18 +231,18 @@
 		*/
 	}
 	#foreingTurn	{
-		margin-left:52%;
+		//margin-left:52%;
 	}
 	#localTurn{
-		margin-left:57%;
+		//margin-left:57%;
 	}
 	.bro{
-		margin-right: 20%;
-		margin-left: 18%;
+		//margin-right: 20%;
+		//margin-left: 18%;
 	}
 	#yield-div{
-		margin-left: 29%;
-		width:0%;
+/*		margin-left: 29%;
+		width:0%;*/
 	}
 	.mainRibbon{
 		width: 88%;
@@ -259,5 +260,8 @@
 		position:initial;
 		float: right;
 		background-color:initial;
+	}
+	.lRibbon{
+		font-size:14px;
 	}
 }
