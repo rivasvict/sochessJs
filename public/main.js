@@ -498,7 +498,7 @@ var startFClock = function(){
 $($($('#board')[0]).children()).children().removeAttr('style');
 $($($('#board')[0]).children()).children().css('border','none');
 $('#board').width('100%');
-$('.mainRibbon').css('margin-top',dHeight * .35);
+$('.mainRibbon').css('top',dHeight * .35);
 if(dHeight<591){
 	$('#whiteBack').css('top',0);
 	$('#contentGame').css('margin-top',10);
