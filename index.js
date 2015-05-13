@@ -13,12 +13,14 @@ var twitterAPI = require('node-twitter-api');
 var mongoose = require('mongoose');
 var passport = require('passport')
   , TwitterStrategy = require('passport-twitter').Strategy;
-
+var game_routes = require('./routes/game_routes');
 var user = {};
 
 app.use(session({ secret: 'SECRET' }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use('/',game_routes);
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
