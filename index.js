@@ -14,6 +14,7 @@ var mongoose = require('mongoose');
 var passport = require('passport')
   , TwitterStrategy = require('passport-twitter').Strategy;
 var game_routes = require('./routes/game_routes');
+var twitter_routes = require('./routes/twitter_routes');
 var user = {};
 
 app.use(session({ secret: 'SECRET' }));
@@ -21,6 +22,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/',game_routes);
+app.use('/',twitter_routes);
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
