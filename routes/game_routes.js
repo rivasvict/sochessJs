@@ -1,4 +1,6 @@
 var express = require('express');
+var http = require('http').Server(express);
+var io = require('socket.io')(http);
 var mongoose = require('mongoose');
 var path = require('path');
 var aux = require('../modules/aux');
@@ -7,7 +9,15 @@ var environment = aux.trigger;
 var switchEnv = environment.target;
 var mongoUrl = environment.mongo;
 var authTwitterCallback = environment.twitterCallback;
-var passport = require('../modules/twitter');
+var twitter_module = require('../modules/twitter');
+var passport = twitter_module.passport;
+
+var rExist = aux.rExist;
+var g = aux.g;
+var un = aux.un;
+
+var roomsExist = aux.roomsExist;
+var roo = mongoose.model('roo',mongoose.testSchema);
 
 // DE FINING A ROUTE WITH PARAMETERS TO BE CATCHED LATER
 

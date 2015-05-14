@@ -1,6 +1,23 @@
 var express = require('express');
 var router = express.Router();
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var aux = require('../modules/aux');
+var twitter_handler = require('../modules/twitter');
+var twitter = twitter_handler.twitter;
+
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded());
+router.use(cookieParser());
+
+var testSchema = new mongoose.Schema({id: String, players: Array});
+var roo = mongoose.model('roo',testSchema);
+var entrance = aux.entrance;
+var environment = aux.trigger.target;
+
+var generateId = aux.generateId;
 
 router.get('/',ensureLoggedIn('/auth/twitter'),function(req,res){
 	if(req.cookies.user === undefined){

@@ -5,8 +5,6 @@ var mongoose = require('mongoose');
 // SET LOCAL FOR LOCAL ENVIRONMENTS OR NOTHING FOR REMOTE ENVIRONMENTS
 var lead = 'local';
 
-
-
 var switchEnv = function(env){
 	if(env==='local'){
 		console.log('Local routes added');
@@ -153,7 +151,8 @@ var aux = {
 	entrance:entrance,
 	deleteElement:deleteElement,
 	roomsExist:roomsExist,
-	rExist:rExist
+	rExist:rExist,
+	generateId:generateId
 }
 
 module.exports = aux;
