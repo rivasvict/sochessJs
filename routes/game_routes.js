@@ -1,11 +1,11 @@
+var app = require('express')();
 var express = require('express');
-var http = require('http').Server(express);
-var io = require('socket.io')(http);
+var http = require('http').Server(app);
 var mongoose = require('mongoose');
 var path = require('path');
 var aux = require('../modules/aux');
 var router = express.Router();
-var environment = aux.trigger;
+var environment = aux.trigger.target;
 var switchEnv = environment.target;
 var mongoUrl = environment.mongo;
 var authTwitterCallback = environment.twitterCallback;
@@ -17,6 +17,10 @@ var g = aux.g;
 var un = aux.un;
 
 var roomsExist = aux.roomsExist;
+var isConnected = aux.isConnected;
+var loginR = aux.loginR;
+var rooms = aux.rooms;
+var rName = aux.rName;
 var roo = mongoose.model('roo',mongoose.testSchema);
 
 // DE FINING A ROUTE WITH PARAMETERS TO BE CATCHED LATER

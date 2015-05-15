@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var aux = require('../modules/aux');
 var twitter_handler = require('../modules/twitter');
 var twitter = twitter_handler.twitter;
+var user = twitter_handler.user;
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded());

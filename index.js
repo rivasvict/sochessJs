@@ -1,7 +1,7 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var express = require('express');
-var io = require('socket.io')(http);
+io = require('socket.io')(http);
 var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
