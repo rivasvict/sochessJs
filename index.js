@@ -10,7 +10,7 @@ var game = {};
 
 game.app  = express();
 game.http = require('http').Server(game.app);
-game.io   = require('socket.io')(http);
+game.io   = require('socket.io')(game.http);
 game.aux  = require('./modules/aux');
 
 var main_routes    = require('./routes/main')(game);
@@ -19,19 +19,19 @@ var twitter_routes = require('./routes/twitter_routes')(game);
 
 var user = {};
 
-app.use(session({ secret: 'SECRET' }));
-app.use(passport.initialize());
-app.use(passport.session());
+game.app.use(session({ secret: 'SECRET' }));
+game.app.use(passport.initialize());
+game.app.use(passport.session());
 
-app.use('/',main_routes);
-app.use('/',game_routes);
-app.use('/',twitter_routes);
+game.app.use('/',main_routes);
+game.app.use('/',game_routes);
+game.app.use('/',twitter_routes);
 
 var mongoUrl = '';
 var authTwitterCallback = '';
 
 
-app.get('/tst',function(req,res){
+game.app.get('/tst',function(req,res){
 	res.render('game');
 });
 
@@ -45,7 +45,7 @@ mongoose.connect(mongoUrl,function(error){
 	console.log(error);
 });
 
-app.get('/dbtest',function(req,res, next){
+game.app.get('/dbtest',function(req,res, next){
 	mongoose.connect(mongoUrl,function(error){
 		if(error)
 		console.log(error);
@@ -59,14 +59,14 @@ app.get('/dbtest',function(req,res, next){
 	});
 });
 
-app.use(express.static(__dirname + '/public'));
+game.app.use(express.static(__dirname + '/public'));
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+game.app.set('views', path.join(__dirname, 'views'));
+game.app.set('view engine', 'jade');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
-app.use(cookieParser());
+game.app.use(bodyParser.json());
+game.app.use(bodyParser.urlencoded());
+game.app.use(cookieParser());
 
 /*var testSchema = new mongoose.Schema({id: String, players: Array});
 

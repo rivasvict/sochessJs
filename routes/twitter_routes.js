@@ -1,12 +1,19 @@
 var express = require('express');
-var twitter_module = require('../modules/twitter');
-var router = express.Router();
-var passport = twitter_module.passport;
 
-router.get('/auth/twitter', passport.authenticate('twitter'));
+var game;
+module.exports = function(_game){
+				game = _game;
 
-router.get('/auth/twitter/callback', 
-  passport.authenticate('twitter', { successRedirect: '/',
-                                     failureRedirect: '/login' }));
+				var router 					= express.Router();
+				var twitter_module 	= require('../modules/twitter');
+				var passport 				= twitter_module.passport;
 
-module.exports = router;
+				router.get('/auth/twitter', passport.authenticate('twitter'));
+
+				router.get('/auth/twitter/callback', 
+					passport.authenticate('twitter', { successRedirect: '/',
+																						 failureRedirect: '/login' }));
+
+				module.exports = router;
+				return router;
+}

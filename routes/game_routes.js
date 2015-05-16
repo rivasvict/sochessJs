@@ -146,4 +146,5 @@ module.exports = function(_game) {
     });*/
 
     module.exports = router;
+		return router;
 }
