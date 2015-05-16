@@ -1,22 +1,22 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var express = require('express');
-io = require('socket.io')(http);
-var path = require('path');
-var favicon = require('static-favicon');
-var logger = require('morgan');
+var bodyParser   = require('body-parser');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
-var twitterAPI = require('node-twitter-api');
-var mongoose = require('mongoose');
-var passport = require('passport')
-  , TwitterStrategy = require('passport-twitter').Strategy;
-var aux = require('./modules/aux');
-var main_routes = require('./routes/main');
-var game_routes = require('./routes/game_routes');
-var twitter_routes = require('./routes/twitter_routes');
+var express      = require('express');
+var mongoose     = require('mongoose');
+var passport     = require('passport');
+var path         = require('path');
+var session      = require('express-session');
+
+var game = {};
+
+game.app  = express();
+game.http = require('http').Server(game.app);
+game.io   = require('socket.io')(http);
+game.aux  = require('./modules/aux');
+
+var main_routes    = require('./routes/main')(game);
+var game_routes    = require('./routes/game_routes')(game);
+var twitter_routes = require('./routes/twitter_routes')(game);
+
 var user = {};
 
 app.use(session({ secret: 'SECRET' }));
@@ -37,7 +37,7 @@ app.get('/tst',function(req,res){
 
 // Set local to use local urls and nothing for remote
 
-var environment = aux.trigger;
+var environment = game.aux.trigger;
 mongoUrl = environment.mongo;
 
 mongoose.connect(mongoUrl,function(error){
@@ -72,4 +72,4 @@ app.use(cookieParser());
 
 var roo = mongoose.model('roo',testSchema);*/
 
-http.listen(process.env.PORT || 5000);
+game.http.listen(process.env.PORT || 5000);
