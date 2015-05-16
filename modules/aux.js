@@ -3,7 +3,7 @@ var authTwitterCallback = '';
 var mongoose = require('mongoose');
 
 // SET LOCAL FOR LOCAL ENVIRONMENTS OR NOTHING FOR REMOTE ENVIRONMENTS
-var lead = 'local';
+var lead;
 
 var switchEnv = function(env){
 	if(env==='local'){
