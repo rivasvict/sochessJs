@@ -1,4 +1,3 @@
-window.onload = function(){
 				// GAME VARIABLES
 				var dragged = false;
 				var started = false;
@@ -210,6 +209,10 @@ window.onload = function(){
 					onSnapEnd();
 				});
 
+				socket.on('dcnt'+idGame,function(m){
+					ribbonTrigger.disconnected();
+				});
+
 				var ort = 'white';
 
 				if(parseInt(player) === 2){
@@ -247,7 +250,24 @@ window.onload = function(){
 				}
 				var board = new ChessBoard('board',cfg);
 				$('#board').hide();
+				socket.on('activation'+idGame,function(m){
+					$.get('http://avatars.io/twitter/'+username,function(data){
+						//console.log(data);
+					});
+					showUsernames();
+					started = true;
+					$('#waiting-opponent').hide()
+					$('#board').show();
+					if(ort === 'white'){
+						$('#localTurn').show();
+						startLClock();
+					}else{
+						$('#foreingTurn').show();
+						startFClock();
+					}
+				});
+				console.log(started);
 				if(!started){
+					console.log('rain');
 					$('#waiting-opponent').html('<div id="waiting-text">Waiting for your opponent to connect</div><div><img src="/img/loading.gif" class="loading"/></div>');
 				}
-}

@@ -1,4 +1,3 @@
-window.onload = function(){
 // MOST MAIN DOM MANIPUATION
 
 // STYLING FUNCTIONS
@@ -78,23 +77,9 @@ var showUsernames = function(){
 	$('#yield-div').show();
 };
 
-socket.on('activation'+idGame,function(m){
-	$.get('http://avatars.io/twitter/'+username,function(data){
-		//console.log(data);
-	});
-	showUsernames();
-	started = true;
-	$('#waiting-opponent').hide()
-	$('#board').show();
-	if(ort === 'white'){
-		$('#localTurn').show();
-		startLClock();
-	}else{
-		$('#foreingTurn').show();
-		startFClock();
-	}
-});
 
+
+window.onload = function(){
 // STYLES THAT DEPEND ON HEIGHT MEASUREMENT
 
 $($($('#board')[0]).children()).children().removeAttr('style');
