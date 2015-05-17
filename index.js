@@ -60,7 +60,7 @@ game.app.get('/dbtest',function(req,res, next){
 });
 
 game.app.use(express.static(__dirname + '/public'));
-
+game.app.use(express.static(__dirname + '/public/game'));
 game.app.set('views', path.join(__dirname, 'views'));
 game.app.set('view engine', 'jade');
 
